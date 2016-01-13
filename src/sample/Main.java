@@ -12,6 +12,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -21,6 +23,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import javax.swing.text.html.FormSubmitEvent;
 
 public class Main extends Application {
 
@@ -75,7 +79,7 @@ public class Main extends Application {
         grid.add(pwBox, 1, 2);
 
         //Shows the grid lines. Useful for debugging purposes
-        grid.setGridLinesVisible(true);
+        grid.setGridLinesVisible(false);
 
         //Creates a button called btn with the text "Log in"
         Button btn = new Button("Log in");
@@ -126,16 +130,29 @@ public class Main extends Application {
                 }
             }else{
                 actiontarget.setId("actionTarget");
-                actiontarget.setText("Username and password fields are required.");
+                actiontarget.setText("   Username and password fields are required.");
             }
-            //actiontarget.setId("actionTarget");
-            //actiontarget.setText("Sign in button pressed");
         });
 
         btn2.setOnAction(e -> {
             action.newUser(primaryStage);
             //actiontarget.setId("actionTarget");
             //actiontarget.setText("New User button pressed");
+        });
+
+        //Add listeners to submit/username boxes with the enter key
+        userTextField.setOnKeyPressed(event -> {
+            if (event.getCode().equals(KeyCode.ENTER)){
+                //Fire the button as if you were clicking it
+                btn.fire();
+            }
+        });
+
+        pwBox.setOnKeyPressed(event -> {
+            if (event.getCode().equals(KeyCode.ENTER)){
+                //Fire the button as if you were clicking it
+                btn.fire();
+            }
         });
 
         //Grid pane set as root node. Width, Height.
