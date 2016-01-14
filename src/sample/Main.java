@@ -30,6 +30,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        //create objects
         loginPageActions action = new loginPageActions();
 
         primaryStage.setTitle("Password Manager");
@@ -47,6 +48,9 @@ public class Main extends Application {
         //Manages space around the edges of the grid pane
         //Insets is in the order of top, right, bottom, left.  25 pixels padding on each side
         grid.setPadding(new Insets(25, 25, 25, 25));
+
+        //Create scene
+        Scene scene = new Scene(grid, 375, 375);
 
         //create title for the screen
         Text scenetitle = new Text("Welcome!");
@@ -109,9 +113,11 @@ public class Main extends Application {
         final Text actiontarget = new Text();
         grid.add(actiontarget, 0, 6, 3, 1);
 
-
+        //Add another message for attempts left
         final Text attemptsLeft = new Text();
         grid.add(attemptsLeft, 0, 7, 3, 1);
+
+        //Make the columns a default size meant to hold the whole error msg without resizing
         grid.getColumnConstraints().add(new ColumnConstraints(100));
         grid.getColumnConstraints().add(new ColumnConstraints(250));
 
@@ -124,7 +130,7 @@ public class Main extends Application {
                 credentialsAnswer = action.checkUserLogin(userTextField.getText(), pwBox.getText(), attemptsLeft);
 
                 if (credentialsAnswer == 1) {
-                    action.loginUser(primaryStage);
+                    action.loginUser(primaryStage, scene.getWidth(), scene.getHeight());
                 } else {
                     action.invalidUser(actiontarget);
                 }
@@ -135,7 +141,7 @@ public class Main extends Application {
         });
 
         btn2.setOnAction(e -> {
-            action.newUser(primaryStage);
+            action.newUser(primaryStage, scene.getWidth(), scene.getHeight());
             //actiontarget.setId("actionTarget");
             //actiontarget.setText("New User button pressed");
         });
@@ -156,7 +162,10 @@ public class Main extends Application {
         });
 
         //Grid pane set as root node. Width, Height.
-        Scene scene = new Scene(grid, 375, 375);
+        //scene = new Scene(grid, 375, 375);
+
+        //Add the scene to a list
+        SceneList.AddScene(scene);
 
         primaryStage.setScene(scene);
 

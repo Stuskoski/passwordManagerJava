@@ -30,15 +30,15 @@ public class loginPageActions {
     }
 
     //Go to the newUser signup scene
-    public void newUser(Stage primaryStage){
+    public void newUser(Stage primaryStage, double width, double height){
         createScenes newScene = new createScenes();
-        newScene.createSignUpScene(primaryStage);
+        newScene.createSignUpScene(primaryStage, width, height);
     }
 
     //Login the user and go to home scene
-    public void loginUser(Stage primaryStage){
+    public void loginUser(Stage primaryStage, double width, double height){
         createScenes newScene = new createScenes();
-        newScene.createHomeScene(primaryStage);
+        newScene.createHomeScene(primaryStage, width, height);
     }
 
     //Prints that the user/password is invalid
