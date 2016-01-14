@@ -12,7 +12,7 @@ public class SceneList {
     private static ArrayList<Scene> SceneArray = new ArrayList<>();
 
     public static ArrayList GetScene(){
-        SceneArray.forEach();
+        SceneArray.forEach(System.out::println);
         return(SceneArray);
     }
 
