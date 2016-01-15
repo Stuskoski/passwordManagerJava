@@ -1,7 +1,6 @@
 package sample.Models;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,7 +8,6 @@ import java.nio.file.StandardOpenOption;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Created by augustus on 1/14/16.
@@ -22,8 +20,8 @@ public class RegisterUser {
     public static void registerUserWithEmail(String userName, String password, String email){
 
         String salt;
-        String start = "Start:";
-        String end = "End:";
+        String start = "Start: ";
+        String end = " :End";
         String seperator = "--------------------------------------------------------------";
 
         //Use the randomPassword function to get a salt of length 10.
@@ -42,7 +40,7 @@ public class RegisterUser {
         }
 
         //Write all the account information to a file
-        List<String> lines = Arrays.asList(("User: "+userName), start, password, end, salt, ("Email:"+email), seperator);
+        List<String> lines = Arrays.asList(("User: "+userName), start+password+end, ("Salt: "+salt), ("Email:"+email), seperator);
         File testFile = new File(".accountConfig-DoNotEdit");
         Path filePath = Paths.get(".accountConfig-DoNotEdit");
         try {
@@ -59,8 +57,8 @@ public class RegisterUser {
     public static void registerUserWithoutEmail(String userName, String password){
 
         String salt;
-        String start = "Start:";
-        String end = "End:";
+        String start = "Start: ";
+        String end = " :End";
         String seperator = "--------------------------------------------------------------";
         File test = new File(".accountConfig-DoNotEdit");
 
@@ -80,7 +78,7 @@ public class RegisterUser {
         }
 
         //Write all the account information to a file
-        List<String> lines = Arrays.asList(("User: "+userName), start, password, end,  salt, seperator);
+        List<String> lines = Arrays.asList(("User: "+userName), start+password+end, ("Salt: "+salt), seperator);
         Path file = Paths.get(".accountConfig-DoNotEdit");
         try {
             if(test.exists()) {

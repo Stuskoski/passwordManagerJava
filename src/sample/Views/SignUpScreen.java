@@ -122,8 +122,8 @@ public class SignUpScreen {
         grid.add(actiontarget, 0, 6, 3, 1);
 
         //Add another message for attempts left
-        final Text attemptsLeft = new Text();
-        grid.add(attemptsLeft, 0, 7, 3, 1);
+        final Text userValidMsg = new Text();
+        grid.add(userValidMsg, 0, 7, 3, 1);
 
         //Make the columns a default size meant to hold the whole error msg without resizing
         grid.getColumnConstraints().add(new ColumnConstraints(100));
@@ -201,12 +201,18 @@ public class SignUpScreen {
             try {
                 if(RegisterUser.checkIfUserExists(userTextField.getText())){
                     validUser = false;
-                    actiontarget.setId("actionTarget");
-                    actiontarget.setText("   That user name exists already.");
+                    userValidMsg.setId("actionTarget");
+                    userValidMsg.setText("   That user name exists already.");
                 }else{
-                    validUser = true;
-                    actiontarget.setId("userNameAvailable");
-                    actiontarget.setText("   That user name is available.");
+                    if(userTextField.getText().length() == 0){
+                        validUser = false;
+                        userValidMsg.setId("actionTarget");
+                        userValidMsg.setText("   User name may not be empty.");
+                    }else {
+                        validUser = true;
+                        userValidMsg.setId("userNameAvailable");
+                        userValidMsg.setText("   That user name is available.");
+                    }
                 }
             } catch (IOException userCheck) {
                 userCheck.printStackTrace();
