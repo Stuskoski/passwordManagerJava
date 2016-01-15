@@ -28,7 +28,7 @@ public class LoginUser {
         checkTries(attemptsLeft, userName);
 
         try {
-            return (checkFile() && checkUserName(userName) && checkPassWord(password, userName) && (counter < 3) && check);
+            return (checkFile() && checkUserName(userName) && checkPassWord(password, userName) && check);
         } catch (IOException e) {
             System.out.println("Error while logging in user");
             return (false);
