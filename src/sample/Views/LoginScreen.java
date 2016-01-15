@@ -69,6 +69,7 @@ public class LoginScreen {
 
         //Creates a text field object that can be edited at column 1, row 1.
         TextField userTextField = new TextField();
+        userTextField.setPromptText("User Name");
         grid.add(userTextField, 1, 1);
 
         //Created in a similar fashion as above.
@@ -77,6 +78,7 @@ public class LoginScreen {
 
         //Created in a similar fashion as above.
         PasswordField pwBox = new PasswordField();
+        pwBox.setPromptText("Password");
         grid.add(pwBox, 1, 2);
 
         //Shows the grid lines. Useful for debugging purposes
