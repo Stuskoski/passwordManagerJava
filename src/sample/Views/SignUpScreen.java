@@ -1,7 +1,5 @@
 package sample.Views;
 
-import com.sun.deploy.panel.ExceptionListDialog;
-import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,8 +14,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import sample.Main;
 import sample.Models.RegisterUser;
-
-import java.io.File;
 import java.io.IOException;
 
 
@@ -33,7 +29,6 @@ public class SignUpScreen {
     private static Boolean validUser;
 
     public static void createSignUpScene(double width, double height){
-        File test = new File(".accountConfig-DoNotEdit");
         //Create new grid
         GridPane grid = new GridPane();
 
@@ -174,7 +169,7 @@ public class SignUpScreen {
              * signup scene. Must recreate scene for resizing issues.
              */
             LoginScreen loginScreenObj = new LoginScreen();
-            loginScreenObj.createLoginScene(signUpScene.getWidth(), signUpScene.getHeight());
+            LoginScreen.createLoginScene(signUpScene.getWidth(), signUpScene.getHeight());
             Main.getPrimaryStageVar().setScene(loginScreenObj.getLoginScene());
             Main.getPrimaryStageVar().show();
         });

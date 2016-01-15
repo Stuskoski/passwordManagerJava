@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,30 +20,18 @@ import java.util.List;
  */
 public class RegisterUser {
     public static void registerUserWithEmail(String userName, String password, String email){
-
-        String salt;
         String start = "Start: ";
-        String end = " :End";
         String seperator = "--------------------------------------------------------------";
+        File testFile = new File(".accountConfig-DoNotEdit");
 
-        //Use the randomPassword function to get a salt of length 10.
-        salt = HashThoseStrings.generateRandomPassword(10);
-
-        //Concat the hash and password to make one String to be hashed.
-        password = salt+password;
-
-        //Run the hash 1000 times to increase cracking time
-        for (int i = 0; i<=1000; i++){
-            try {
-                password = HashThoseStrings.myHashPasswordFunction(password);
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
+        try {
+            password = SecureHashing.createHash(password);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            System.out.println("Error creating hash for password while registering user.");
         }
 
         //Write all the account information to a file
-        List<String> lines = Arrays.asList(("User: "+userName), start+password+end, ("Salt: "+salt), ("Email:"+email), seperator);
-        File testFile = new File(".accountConfig-DoNotEdit");
+        List<String> lines = Arrays.asList(("User: "+userName), start+password, ("Email:"+email), seperator);
         Path filePath = Paths.get(".accountConfig-DoNotEdit");
         try {
             if(testFile.exists()) {
@@ -55,30 +45,18 @@ public class RegisterUser {
     }
 
     public static void registerUserWithoutEmail(String userName, String password){
-
-        String salt;
         String start = "Start: ";
-        String end = " :End";
         String seperator = "--------------------------------------------------------------";
         File test = new File(".accountConfig-DoNotEdit");
 
-        //Use the randomPassword function to get a salt of length 10.
-        salt = HashThoseStrings.generateRandomPassword(10);
-
-        //Concat the hash and password to make one String to be hashed.
-        password = salt+password;
-
-        //Run the hash 1000 times to increase cracking time
-        for (int i = 0; i<=1000; i++){
-            try {
-                password = HashThoseStrings.myHashPasswordFunction(password);
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
+        try {
+            password = SecureHashing.createHash(password);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            System.out.println("Error creating hash for password while registering user.");
         }
 
         //Write all the account information to a file
-        List<String> lines = Arrays.asList(("User: "+userName), start+password+end, ("Salt: "+salt), seperator);
+        List<String> lines = Arrays.asList(("User: "+userName), start+password, seperator);
         Path file = Paths.get(".accountConfig-DoNotEdit");
         try {
             if(test.exists()) {
@@ -95,6 +73,7 @@ public class RegisterUser {
 
         String line;
         File test = new File(".accountConfig-DoNotEdit");
+        ArrayList<String> user = new ArrayList<>();
 
         //If file doesn't exist, then user doesn't exist.
         if(!test.exists()){
@@ -106,18 +85,16 @@ public class RegisterUser {
         while((line = bf.readLine()) != null){
             if(line.startsWith("User: ")){
                 String[] testUser = line.split("User: ");
-                if(testUser[1].equals(userName)){
-                    bf.close();
-                    return (true);
-                }else{
-                    bf.close();
-                    return(false);
-                }
+                user.add(testUser[1]);
             }
         }
 
-        bf.close();
-        return(true);
+        if(user.contains(userName)){
+            bf.close();
+            return(true);
+        }else{
+            bf.close();
+            return(false);
+        }
     }
-
 }

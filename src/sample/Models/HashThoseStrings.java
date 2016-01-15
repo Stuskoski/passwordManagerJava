@@ -98,8 +98,7 @@ public class HashThoseStrings {
     public static String myHashPasswordFunction(String password) throws NoSuchAlgorithmException {
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
         messageDigest.update(password.getBytes());
-        String encryptedString = new String(messageDigest.digest());
 
-        return encryptedString;
+        return new String(messageDigest.digest());
     }
 }

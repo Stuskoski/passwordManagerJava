@@ -16,7 +16,7 @@ public class Main extends Application {
         LoginScreen loginScreen = new LoginScreen();
 
         //Create the login screen with intial height and width
-        loginScreen.createLoginScene(475, 475);
+        LoginScreen.createLoginScene(475, 475);
 
         //Get the login screen
         login = loginScreen.getLoginScene();

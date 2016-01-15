@@ -12,13 +12,17 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import sample.Main;
-import sample.SceneList;
-import sample.loginPageActions;
+import sample.Models.LoginUser;
 
 /**
  * Created by augustus on 1/14/16.
+ * This is the login screen.  It has several listeners
+ * on the buttons for clicks as well as the input boxes
+ * for the enter key.  The login btn attempts to log in
+ * the user and will display a warning if it is a wrong
+ * attempt.  The new user button will send the user to
+ * the registration page so they can create an account.
  */
 
 public class LoginScreen {
@@ -30,9 +34,6 @@ public class LoginScreen {
     private static Scene loginScene;
 
     public static void createLoginScene(double width, double height){
-        //create objects
-        loginPageActions action = new loginPageActions();
-
         //Create new grid
         GridPane grid = new GridPane();
 
@@ -85,8 +86,8 @@ public class LoginScreen {
         grid.setGridLinesVisible(false);
 
         //Creates a button called btn with the text "Log in"
-        Button btn = new Button("Log in");
-        Button btn2 = new Button("New User");
+        Button loginBtn = new Button("Log in");
+        Button newUserBtn = new Button("New User");
 
         //Creates a Hbox layout pane named hbBtn with spacing of 10 pixels
         HBox hbBtn = new HBox(10);
@@ -101,8 +102,8 @@ public class LoginScreen {
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
 
         //Adds the button as a child of the Hbox pane
-        hbBtn.getChildren().add(btn2);
-        hbBtn.getChildren().add(btn);
+        hbBtn.getChildren().add(newUserBtn);
+        hbBtn.getChildren().add(loginBtn);
 
 
         //Hbox pane added to the grid in column 1, row 4
@@ -122,25 +123,26 @@ public class LoginScreen {
 
 
         //create an event handler
-        btn.setOnAction(e -> {
+        loginBtn.setOnAction(e -> {
             if((userTextField.getText().length() != 0) && (pwBox.getText().length() != 0)) {
-                int credentialsAnswer = 0;
 
-                credentialsAnswer = action.checkUserLogin(userTextField.getText(), pwBox.getText(), attemptsLeft);
-
-                if (credentialsAnswer == 1) {
-                    attemptsLeft.setText("Logged in");
-                    //action.loginUser(primaryStage, scene.getWidth(), scene.getHeight());
-                } else {
-                    action.invalidUser(actiontarget);
+                //Attempt to log in the user.
+                if(LoginUser.loginUser(userTextField.getText(), pwBox.getText(), attemptsLeft)){
+                    actiontarget.setId("actionTarget");
+                    actiontarget.setText("Logged in");
+                    LoginUser.resetPasswordCounter();
+                }else{
+                    actiontarget.setId("actionTarget");
+                    actiontarget.setText("Incorrect User Name/Password");
                 }
+
             }else{
                 actiontarget.setId("actionTarget");
-                actiontarget.setText("   Username and password fields are required.");
+                actiontarget.setText("Username and password fields are required.");
             }
         });
 
-        btn2.setOnAction(e -> {
+        newUserBtn.setOnAction(e -> {
             /**
              * This little button listen creates the signup screen.
              * It then sets the primary stage var as the new screen.
@@ -148,7 +150,7 @@ public class LoginScreen {
              * signup scene.
              */
             SignUpScreen signUpScreenObj = new SignUpScreen();
-            signUpScreenObj.createSignUpScene(loginScene.getWidth(), loginScene.getHeight());
+            SignUpScreen.createSignUpScene(loginScene.getWidth(), loginScene.getHeight());
             Main.getPrimaryStageVar().setScene(signUpScreenObj.getSignUpScene());
             Main.getPrimaryStageVar().show();
         });
@@ -157,13 +159,13 @@ public class LoginScreen {
         userTextField.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.ENTER)){
                 //Fire the button as if you were clicking it
-                btn.fire();
+                loginBtn.fire();
             }
         });
         pwBox.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.ENTER)){
                 //Fire the button as if you were clicking it
-                btn.fire();
+                loginBtn.fire();
             }
         });
 
