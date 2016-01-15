@@ -12,6 +12,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import sample.Controllers.ShowViews;
 import sample.Main;
 import sample.Models.RegisterUser;
 import java.io.IOException;
@@ -145,10 +146,12 @@ public class SignUpScreen {
                     if(emailExists && validEmail) {
                         if(validUser) {
                             RegisterUser.registerUserWithEmail(userTextField.getText(), pwBox.getText(), emailTextField.getText());
+                            ShowViews.showHomeScreen(scene.getWidth(), scene.getHeight());
                         }
                     }else{
                         if(validUser) {
                             RegisterUser.registerUserWithoutEmail(userTextField.getText(), pwBox.getText());
+                            ShowViews.showHomeScreen(scene.getWidth(), scene.getHeight());
                         }
                     }
                 }else{

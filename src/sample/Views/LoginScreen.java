@@ -12,6 +12,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import sample.Controllers.ShowViews;
 import sample.Main;
 import sample.Models.LoginUser;
 
@@ -131,6 +132,7 @@ public class LoginScreen {
                     actiontarget.setId("actionTarget");
                     actiontarget.setText("Logged in");
                     LoginUser.resetPasswordCounter();
+                    ShowViews.showHomeScreen(loginScene.getWidth(), loginScene.getHeight());
                 }else{
                     actiontarget.setId("actionTarget");
                     actiontarget.setText("Incorrect User Name/Password");
