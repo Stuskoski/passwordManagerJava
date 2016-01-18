@@ -1,13 +1,24 @@
 package sample.Views;
 
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import sample.Main;
 
 import javax.swing.*;
+import java.awt.*;
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -24,7 +35,9 @@ public class HomeScreen {
         VBox topContainer = new VBox();  //Creates a container to hold all Menu Objects.
         MenuBar mainMenu = new MenuBar();  //Creates our main menu to hold our Sub-Menus.
         TabPane tabPane = new TabPane();
+        //FlowPane flow = new FlowPane(Orientation.HORIZONTAL);
 
+        //topContainer.getChildren().add(flow);
         topContainer.getChildren().add(mainMenu);
         topContainer.getChildren().add(tabPane);
 
@@ -36,10 +49,10 @@ public class HomeScreen {
         Menu help = new Menu("Help");
 
         //Create and add the "File" sub-menu options.
-        MenuItem openFile = new MenuItem("Open File");
+        MenuItem export = new MenuItem("Export");
         MenuItem logout = new MenuItem("Logout");
         MenuItem exitApp = new MenuItem("Exit");
-        file.getItems().addAll(openFile,logout,exitApp);
+        file.getItems().addAll(export,logout,exitApp);
 
         //Create and add the "Edit" sub-menu options.
         MenuItem properties = new MenuItem("Properties");
@@ -49,17 +62,21 @@ public class HomeScreen {
         MenuItem visitWebsite = new MenuItem("Visit Website");
         help.getItems().add(visitWebsite);
 
+        final Menu leftSpacer = new Menu();
+        leftSpacer.setText("        ");
+
+
         mainMenu.getMenus().addAll(file, edit, help);
 
-        for (int i = 0; i < 5; i++) {
-            Tab tab = new Tab();
-            tab.setText("Tab " + i);
-            HBox hbox = new HBox();
-            hbox.getChildren().add(new Label("Tab" + i));
-            tab.setContent(hbox);
-            tabPane.getTabs().add(tab);
-        }
 
+        //Create the tabs and then add them
+        Tab homeTab1 = new Tab();
+        homeTab1.setText("Home");
+        homeTab1 = createHomeTab(homeTab1);
+        //homeTab1.setContent(hbox);
+        tabPane.getTabs().add(homeTab1);
+
+        //Unable to close tabs
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         //Create scene
@@ -71,7 +88,8 @@ public class HomeScreen {
         exitApp.setOnAction(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirmation Dialog");
-            alert.setContentText("Are you ready to exit?");
+            alert.setContentText("Exit Password Manager?");
+            alert.setHeaderText(null);
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK){
@@ -79,10 +97,14 @@ public class HomeScreen {
             }
         });
 
+        //Add a hotkey for the listener.  Automatically adds the Ctrl+E in the menu bar.
+        exitApp.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN));
+
         logout.setOnAction(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirmation Dialog");
             alert.setContentText("Logout?");
+            alert.setHeaderText(null);
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK){
@@ -90,18 +112,39 @@ public class HomeScreen {
             }
         });
 
+        logout.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN));
+
         setHomeScene(scene);
     }
 
+    //Logout the user by sending them back to the login screen
     private static void logoutUser() {
+        LoginScreen.setLoggedInUser("");
         Main.getPrimaryStageVar().setScene(LoginScreen.getLoginScene());
+    }
+
+    //Create the home tab for the home screen.
+    private static Tab createHomeTab(Tab homeTab){
+        //Create the default pane that will hold everything
+        BorderPane home = new BorderPane();
+
+        //Create the welcome msg for alignment at the top center.  Set it on the pane as well.
+        HBox welcomeMsg = new HBox();
+        welcomeMsg.setAlignment(Pos.CENTER);
+        welcomeMsg.getChildren().add(new Label("Welcome " + LoginScreen.getLoggedInUser() + "!"));
+        home.setTop(welcomeMsg);
+
+        GridPane homeGrid = new GridPane();
+        home.setCenter(homeGrid);
+
+
+        homeTab.setContent(home);
+
+        return homeTab;
     }
 
     public static Scene getHomeScene(){
         return(homeScene);
     }
-
     public static void setHomeScene(Scene scene){ homeScene = scene; }
-
-
 }

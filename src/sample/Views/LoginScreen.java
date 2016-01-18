@@ -33,6 +33,7 @@ public class LoginScreen {
      * that is created from the class
      **/
     private static Scene loginScene;
+    private static String loggedInUser = "";
 
     public static void createLoginScene(double width, double height){
         //Create new grid
@@ -131,6 +132,7 @@ public class LoginScreen {
                 if(LoginUser.loginUser(userTextField.getText(), pwBox.getText(), attemptsLeft)){
                     actiontarget.setText("");
                     attemptsLeft.setText("");
+                    setLoggedInUser(userTextField.getText());
                     LoginUser.resetPasswordCounter();
                     ShowViews.showHomeScreen(loginScene.getWidth(), loginScene.getHeight());
                 }else{
@@ -181,6 +183,7 @@ public class LoginScreen {
     public static void setLoginScene(Scene scene){
         loginScene = scene;
     }
+    public static void setLoggedInUser(String string) { loggedInUser = string; }
 
     //Getters
     public static Scene getLoginScene(){
@@ -192,4 +195,5 @@ public class LoginScreen {
     public double getLoginSceneHeight(){
         return (loginScene.getHeight());
     }
+    public static String getLoggedInUser() { return loggedInUser; }
 }
