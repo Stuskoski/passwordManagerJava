@@ -129,8 +129,8 @@ public class LoginScreen {
 
                 //Attempt to log in the user.
                 if(LoginUser.loginUser(userTextField.getText(), pwBox.getText(), attemptsLeft)){
-                    actiontarget.setId("actionTarget");
-                    actiontarget.setText("Logged in");
+                    actiontarget.setText("");
+                    attemptsLeft.setText("");
                     LoginUser.resetPasswordCounter();
                     ShowViews.showHomeScreen(loginScene.getWidth(), loginScene.getHeight());
                 }else{
@@ -183,7 +183,7 @@ public class LoginScreen {
     }
 
     //Getters
-    public Scene getLoginScene(){
+    public static Scene getLoginScene(){
         return(loginScene);
     }
     public double getLoginSceneWidth(){
@@ -192,5 +192,4 @@ public class LoginScreen {
     public double getLoginSceneHeight(){
         return (loginScene.getHeight());
     }
-
 }
