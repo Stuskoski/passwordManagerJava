@@ -1,24 +1,21 @@
 package sample.Views;
 
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.effect.Effect;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Circle;
 import sample.Main;
+import sample.Views.Tabs.HomeTab;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -49,9 +46,18 @@ public class HomeScreen {
         Menu help = new Menu("Help");
 
         //Create and add the "File" sub-menu options.
-        MenuItem export = new MenuItem("Export");
+        Menu export = new Menu("Export");
         MenuItem logout = new MenuItem("Logout");
         MenuItem exitApp = new MenuItem("Exit");
+
+        //create submenu items for export
+        MenuItem exportEncrypted = new MenuItem("Export Passwords in cleartext (Not Encrypted)");
+        MenuItem exportClear = new MenuItem("Export Passwords in ciphertext (Encrypted)");
+
+        //Add the submenu items to export
+        export.getItems().addAll(exportEncrypted, exportClear);
+
+        //Add all the buttons to the file menu
         file.getItems().addAll(export,logout,exitApp);
 
         //Create and add the "Edit" sub-menu options.
@@ -62,22 +68,18 @@ public class HomeScreen {
         MenuItem visitWebsite = new MenuItem("Visit Website");
         help.getItems().add(visitWebsite);
 
-        final Menu leftSpacer = new Menu();
-        leftSpacer.setText("        ");
-
-
+        //Add the 3 main options
         mainMenu.getMenus().addAll(file, edit, help);
-
 
         //Create the tabs and then add them
         Tab homeTab1 = new Tab();
         homeTab1.setText("Home");
-        homeTab1 = createHomeTab(homeTab1);
-        //homeTab1.setContent(hbox);
+        homeTab1 = HomeTab.createHomeTab(homeTab1);
+        homeTab1.setClosable(false); //Unable to close tab
         tabPane.getTabs().add(homeTab1);
 
         //Unable to close tabs
-        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        //tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         //Create scene
         Scene scene = new Scene(root, width, height);
@@ -121,26 +123,6 @@ public class HomeScreen {
     private static void logoutUser() {
         LoginScreen.setLoggedInUser("");
         Main.getPrimaryStageVar().setScene(LoginScreen.getLoginScene());
-    }
-
-    //Create the home tab for the home screen.
-    private static Tab createHomeTab(Tab homeTab){
-        //Create the default pane that will hold everything
-        BorderPane home = new BorderPane();
-
-        //Create the welcome msg for alignment at the top center.  Set it on the pane as well.
-        HBox welcomeMsg = new HBox();
-        welcomeMsg.setAlignment(Pos.CENTER);
-        welcomeMsg.getChildren().add(new Label("Welcome " + LoginScreen.getLoggedInUser() + "!"));
-        home.setTop(welcomeMsg);
-
-        GridPane homeGrid = new GridPane();
-        home.setCenter(homeGrid);
-
-
-        homeTab.setContent(home);
-
-        return homeTab;
     }
 
     public static Scene getHomeScene(){

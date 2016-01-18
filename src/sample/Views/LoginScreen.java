@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.Light;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -14,7 +15,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import sample.Controllers.ShowViews;
 import sample.Main;
+import sample.Models.EntryObjects;
 import sample.Models.LoginUser;
+import sample.Models.UserPasswordFileActions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by augustus on 1/14/16.
@@ -34,6 +40,7 @@ public class LoginScreen {
      **/
     private static Scene loginScene;
     private static String loggedInUser = "";
+    private static String userPass = "";
 
     public static void createLoginScene(double width, double height){
         //Create new grid
@@ -128,11 +135,16 @@ public class LoginScreen {
         loginBtn.setOnAction(e -> {
             if((userTextField.getText().length() != 0) && (pwBox.getText().length() != 0)) {
 
-                //Attempt to log in the user.
+                //Attempt to log in the user. If successful then set the pass,
+                //Set the loggedInUser, create a user file for password entries
+                //And reset the counter information for the login page.
+                //Finally, set the new scene.
                 if(LoginUser.loginUser(userTextField.getText(), pwBox.getText(), attemptsLeft)){
                     actiontarget.setText("");
                     attemptsLeft.setText("");
+                    setUserPass(pwBox.getText());
                     setLoggedInUser(userTextField.getText());
+                    UserPasswordFileActions.createUserFile();
                     LoginUser.resetPasswordCounter();
                     ShowViews.showHomeScreen(loginScene.getWidth(), loginScene.getHeight());
                 }else{
@@ -184,6 +196,7 @@ public class LoginScreen {
         loginScene = scene;
     }
     public static void setLoggedInUser(String string) { loggedInUser = string; }
+    public static void setUserPass(String string) { userPass = string; }
 
     //Getters
     public static Scene getLoginScene(){
@@ -196,4 +209,5 @@ public class LoginScreen {
         return (loginScene.getHeight());
     }
     public static String getLoggedInUser() { return loggedInUser; }
+    public static String getUserPass() { return userPass; }
 }

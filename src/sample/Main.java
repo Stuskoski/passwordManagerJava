@@ -3,6 +3,7 @@ package sample;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import sample.Models.UserPasswordFileActions;
 import sample.Views.*;
 
 
@@ -14,6 +15,13 @@ public class Main extends Application {
         //Create variables/objects
         Scene login;
         LoginScreen loginScreen = new LoginScreen();
+
+        //Quick OS check.
+        if (System.getProperty("os.name").equals("Linux")) {
+            UserPasswordFileActions.setIsLinux(true);
+        } else {
+            UserPasswordFileActions.setIsLinux(false);
+        }
 
         //Create the login screen with intial height and width
         LoginScreen.createLoginScene(475, 475);
