@@ -118,6 +118,7 @@ public class UserPasswordFileActions {
         File linuxEncrypted = new File(".UserFiles/." + LoginScreen.getLoggedInUser()+ "Dir" + "/.EncryptedObj");
         File linuxDecrypted = new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir" + "/.Decrypted");
         File windowsPasswordFile = new File("UserFiles/." + LoginScreen.getLoggedInUser());
+        //Paths deletePath = new Paths(".UserFiles");
 
         //Quick check for user file if it exists, if not create it.
         createUserFile();
@@ -129,6 +130,8 @@ public class UserPasswordFileActions {
                 FileOutputStream fout = new FileOutputStream(linuxObjFile.toString());
                 ObjectOutputStream oos = new ObjectOutputStream(fout);
                 oos.writeObject(objectsToFile);
+                encrypt(linuxObjFile, linuxEncrypted);
+                //Files.deleteIfExists(linuxObjFile.toPath());
             } catch (IOException e) {
                 System.out.println("Error while trying to write objects to Linux file");
             }
@@ -143,12 +146,12 @@ public class UserPasswordFileActions {
             }
         }
 
-        encrypt(linuxObjFile, linuxEncrypted);
-        decrypt(linuxEncrypted, linuxDecrypted);
+        //encrypt(linuxObjFile, linuxEncrypted);
+        //decrypt(linuxEncrypted, linuxDecrypted);
     }
 
     //This function gets the objects stored in the users file.
-    public static List<EntryObjects> getObjectsFromFile(){
+    public static List<EntryObjects> getObjectsFromFile(File decryptedFile){
         File linuxObjFile = new File(".UserFiles/." + LoginScreen.getLoggedInUser()+"Dir/." + LoginScreen.getLoggedInUser() + "Obj" );
         File windowsPasswordFile = new File("UserFiles/." + LoginScreen.getLoggedInUser());
         List<EntryObjects> entries = new ArrayList<>();
@@ -156,10 +159,11 @@ public class UserPasswordFileActions {
         if(isLinux){
             try {
                 ObjectInputStream objectInputStream = new ObjectInputStream(
-                        new FileInputStream(linuxObjFile.toString()));
+                        new FileInputStream(decryptedFile.toString()));
                 entries = (List<EntryObjects>) objectInputStream.readObject();
                 return entries;
             } catch (IOException e) {
+                System.out.println(e.getMessage());
                 System.out.println("No objects to read from file.");
             } catch (ClassNotFoundException e) {
                 System.out.println("Error while trying to read objects from Linux file.");

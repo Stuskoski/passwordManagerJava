@@ -15,10 +15,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import sample.Controllers.ShowViews;
 import sample.Main;
+import sample.Models.EntryObjectList;
 import sample.Models.EntryObjects;
 import sample.Models.LoginUser;
 import sample.Models.UserPasswordFileActions;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,6 +147,7 @@ public class LoginScreen {
                     setUserPass(pwBox.getText());
                     setLoggedInUser(userTextField.getText());
                     UserPasswordFileActions.createUserFile();
+                    EntryObjectList.checkForObjInFile(new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/.EncryptedObj"));
                     LoginUser.resetPasswordCounter();
                     ShowViews.showHomeScreen(loginScene.getWidth(), loginScene.getHeight());
                 }else{
