@@ -6,6 +6,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import sample.Models.EntryObjectList;
 import sample.Models.EntryObjects;
 import sample.Models.GetUsersPasswordEntries;
 import sample.Models.UserPasswordFileActions;
@@ -40,7 +41,8 @@ public class HomeTab {
         testd.setDescription("This is my BoA Account Pass");
         testd.setPassword("summer123");
         userEntrie.add(testd);
-        UserPasswordFileActions.writeObjectsToFile(userEntrie);
+        EntryObjectList.setObjectList(userEntrie);
+        UserPasswordFileActions.writeObjectsToFile(EntryObjectList.getObjectList());
 
         //Get the objects from the file
         userEntries = UserPasswordFileActions.getObjectsFromFile();

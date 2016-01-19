@@ -13,6 +13,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
 import sample.Main;
+import sample.Views.Tabs.CreateEntryTab;
 import sample.Views.Tabs.HomeTab;
 
 import java.util.Map;
@@ -77,6 +78,12 @@ public class HomeScreen {
         homeTab1 = HomeTab.createHomeTab(homeTab1);
         homeTab1.setClosable(false); //Unable to close tab
         tabPane.getTabs().add(homeTab1);
+
+        Tab createEntryTab2 = new Tab();
+        createEntryTab2.setText("New Entry");
+        createEntryTab2 = CreateEntryTab.createEntryTab(createEntryTab2);
+        createEntryTab2.setClosable(true);
+        tabPane.getTabs().add(createEntryTab2);
 
         //Unable to close tabs
         //tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);

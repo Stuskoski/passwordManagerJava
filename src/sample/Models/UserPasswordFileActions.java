@@ -32,7 +32,8 @@ public class UserPasswordFileActions {
         File linuxObjFile = new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/." + LoginScreen.getLoggedInUser() + "Obj");
 
         File windowsDirectory = new File("UserFiles");
-        File windowsPasswordFile = new File("UserFiles/." + LoginScreen.getLoggedInUser());
+        File windowsPassDirectory = new File("UserFiles/" + LoginScreen.getLoggedInUser() + "Dir");
+        File windowsObjFile = new File("UserFiles/" + LoginScreen.getLoggedInUser() + "Dir/" + LoginScreen.getLoggedInUser() + "Obj");
 
 
         //This guy just handles windows and linux directory creation.
@@ -84,14 +85,23 @@ public class UserPasswordFileActions {
                     }
                 }
                 //If password doesnt exist, create it and set it as hidden in windows.
-                if (!windowsPasswordFile.exists()) {
+                if (!windowsPassDirectory.exists()) {
                     try {
-                        if(windowsPasswordFile.createNewFile()){
-                            System.out.println("Windows user password file created.");
-                            Path windowsFile = Paths.get("UserFiles/." + LoginScreen.getLoggedInUser());
+                        if(windowsPassDirectory.mkdir()){
+                            System.out.println("Windows user directory created.");
+                            Path windowsFile = Paths.get("UserFiles/" + LoginScreen.getLoggedInUser()+"Dir");
                             Files.setAttribute(windowsFile, "dos:hidden", true);
+                            if(!windowsObjFile.exists()){
+                                if(windowsObjFile.createNewFile()){
+                                    System.out.println("Windows Obj File Created.");
+                                    Path windowsObjFilePath = Paths.get("UserFiles/" + LoginScreen.getLoggedInUser()+"Dir/" + LoginScreen.getLoggedInUser() + "Obj");
+                                    Files.setAttribute(windowsObjFilePath, "dos:hidden", true);
+                                }else{
+                                    System.out.println("Unable to create Windows Obj File.");
+                                }
+                            }
                         }else{
-                            System.out.println("Unable to create Windows user password file.");
+                            System.out.println("Unable to create Windows Pass Directory.");
                         }
                     } catch (IOException e) {
                         System.out.println("Unable to create windows user password file.");
