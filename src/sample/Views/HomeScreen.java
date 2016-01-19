@@ -13,9 +13,14 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
 import sample.Main;
+import sample.Models.EntryObjectList;
+import sample.Models.UserPasswordFileActions;
 import sample.Views.Tabs.CreateEntryTab;
 import sample.Views.Tabs.HomeTab;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Map;
 import java.util.Optional;
 
@@ -102,6 +107,15 @@ public class HomeScreen {
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK){
+                //save progress
+                UserPasswordFileActions.writeObjectsToFile(EntryObjectList.getObjectList());
+                UserPasswordFileActions.encrypt(new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/." + LoginScreen.getLoggedInUser() + "Obj"),
+                        new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/.EncryptedObj"));
+                try {
+                    Files.deleteIfExists(new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/." + LoginScreen.getLoggedInUser() + "Obj").toPath());
+                } catch (IOException e) {
+                    System.out.println("An error occured when exiting.");
+                }
                 System.exit(0);
             }
         });
@@ -117,6 +131,15 @@ public class HomeScreen {
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK){
+                //save progress
+                UserPasswordFileActions.writeObjectsToFile(EntryObjectList.getObjectList());
+                UserPasswordFileActions.encrypt(new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/." + LoginScreen.getLoggedInUser() + "Obj"),
+                        new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/.EncryptedObj"));
+                try {
+                    Files.deleteIfExists(new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/." + LoginScreen.getLoggedInUser() + "Obj").toPath());
+                } catch (IOException e) {
+                    System.out.println("An error occured when exiting.");
+                }
                 logoutUser();
             }
         });

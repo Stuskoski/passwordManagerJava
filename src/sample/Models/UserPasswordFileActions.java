@@ -53,26 +53,24 @@ public class UserPasswordFileActions {
                 }
 
                 if (!linuxPassDirectory.exists()) {
-                    try {
-                        if(linuxPassDirectory.mkdir()){
-                            System.out.println("Linux user directory created");
-                            if(!linuxObjFile.exists()){
-                                if(linuxObjFile.createNewFile()){
-                                    System.out.println("Linux User Obj File Created.");
-                                }else{
-                                    System.out.println("Unable to create Linux User Obj File.");
-                                }
-                            }
-                           // Set<PosixFilePermission> perms =
-                           //         PosixFilePermissions.fromString("rw-------");
-                           // Files.setPosixFilePermissions(linuxPasswordFile.toPath(), perms);
-                        }else{
-                            System.out.println("Unable to create Linux user directory.");
-                        }
-                    } catch (IOException e) {
-                        System.out.println("Unable to create Linux user password file");
+                    if(linuxPassDirectory.mkdir()){
+                        System.out.println("Linux user directory created");
+                       // Set<PosixFilePermission> perms =
+                       //         PosixFilePermissions.fromString("rw-------");
+                       // Files.setPosixFilePermissions(linuxPasswordFile.toPath(), perms);
+                    }else{
+                        System.out.println("Unable to create Linux user directory.");
                     }
                 }
+
+                if(!linuxObjFile.exists()){
+                    if(linuxObjFile.createNewFile()){
+                        System.out.println("Linux User Obj File Created.");
+                    }else{
+                        System.out.println("Unable to create Linux User Obj File.");
+                    }
+                }
+
             } else {
                 //If directory doesn't exist, create it and set it as hidden in windows.
                 if (!windowsDirectory.exists()) {
