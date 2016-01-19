@@ -1,18 +1,16 @@
 package sample.Models;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import sample.Views.LoginScreen;
-
+import javax.crypto.*;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.PosixFilePermission;
-import java.nio.file.attribute.PosixFilePermissions;
+import java.security.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by augustus on 1/18/16.
@@ -20,6 +18,7 @@ import java.util.Set;
  */
 public class UserPasswordFileActions {
 
+    private static final String TRANSFORMATION = "AES";
     public static boolean isLinux;
 
     /**
@@ -29,8 +28,10 @@ public class UserPasswordFileActions {
      */
     public static void createUserFile() {
         File linuxDirectory = new File(".UserFiles");
+        File linuxPassDirectory = new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir");
+        File linuxObjFile = new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/." + LoginScreen.getLoggedInUser() + "Obj");
+
         File windowsDirectory = new File("UserFiles");
-        File linuxPasswordFile = new File(".UserFiles/." + LoginScreen.getLoggedInUser());
         File windowsPasswordFile = new File("UserFiles/." + LoginScreen.getLoggedInUser());
 
 
@@ -41,7 +42,7 @@ public class UserPasswordFileActions {
             if (isLinux) {
                 if (!linuxDirectory.exists()) {
                     if (linuxDirectory.mkdir()) {
-                        System.out.println("Directory Created For Linux");
+                        System.out.println("Main Directory Created For Linux");
                        // Set<PosixFilePermission> perms =
                        //         PosixFilePermissions.fromString("rw-------");
                        // Files.setPosixFilePermissions(linuxDirectory.toPath(), perms);
@@ -50,22 +51,29 @@ public class UserPasswordFileActions {
                     }
                 }
 
-                if (!linuxPasswordFile.exists()) {
+                if (!linuxPassDirectory.exists()) {
                     try {
-                        if(linuxPasswordFile.createNewFile()){
-                            System.out.println("Linux user password file created");
+                        if(linuxPassDirectory.mkdir()){
+                            System.out.println("Linux user directory created");
+                            if(!linuxObjFile.exists()){
+                                if(linuxObjFile.createNewFile()){
+                                    System.out.println("Linux User Obj File Created.");
+                                }else{
+                                    System.out.println("Unable to create Linux User Obj File.");
+                                }
+                            }
                            // Set<PosixFilePermission> perms =
                            //         PosixFilePermissions.fromString("rw-------");
                            // Files.setPosixFilePermissions(linuxPasswordFile.toPath(), perms);
                         }else{
-                            System.out.println("Unable to create Linux user password file.");
+                            System.out.println("Unable to create Linux user directory.");
                         }
                     } catch (IOException e) {
                         System.out.println("Unable to create Linux user password file");
                     }
                 }
             } else {
-                //If directory doesnt exist, create it and set it as hidden in windows.
+                //If directory doesn't exist, create it and set it as hidden in windows.
                 if (!windowsDirectory.exists()) {
                     if (windowsDirectory.mkdir()) {
                         System.out.println("Directory Created For Windows");
@@ -96,7 +104,9 @@ public class UserPasswordFileActions {
     }
 
     public static void writeObjectsToFile(List<EntryObjects> objectsToFile){
-        File linuxPasswordFile = new File(".UserFiles/." + LoginScreen.getLoggedInUser());
+        File linuxObjFile = new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/." + LoginScreen.getLoggedInUser() + "Obj" );
+        File linuxEncrypted = new File(".UserFiles/." + LoginScreen.getLoggedInUser()+ "Dir" + "/.EncryptedObj");
+        File linuxDecrypted = new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir" + "/.Decrypted");
         File windowsPasswordFile = new File("UserFiles/." + LoginScreen.getLoggedInUser());
 
         //Quick check for user file if it exists, if not create it.
@@ -106,7 +116,7 @@ public class UserPasswordFileActions {
 
         if(isLinux){
             try {
-                FileOutputStream fout = new FileOutputStream(linuxPasswordFile.toString());
+                FileOutputStream fout = new FileOutputStream(linuxObjFile.toString());
                 ObjectOutputStream oos = new ObjectOutputStream(fout);
                 oos.writeObject(objectsToFile);
             } catch (IOException e) {
@@ -121,21 +131,22 @@ public class UserPasswordFileActions {
             } catch (IOException e) {
                 System.out.println("Error while trying to write objects to Windows file");
             }
-
         }
+
+        encrypt(linuxObjFile, linuxEncrypted);
+        decrypt(linuxEncrypted, linuxDecrypted);
     }
 
     //This function gets the objects stored in the users file.
     public static List<EntryObjects> getObjectsFromFile(){
-        File linuxPasswordFile = new File(".UserFiles/." + LoginScreen.getLoggedInUser());
+        File linuxObjFile = new File(".UserFiles/." + LoginScreen.getLoggedInUser()+"Dir/." + LoginScreen.getLoggedInUser() + "Obj" );
         File windowsPasswordFile = new File("UserFiles/." + LoginScreen.getLoggedInUser());
         List<EntryObjects> entries = new ArrayList<>();
-        EntryObjects userEntries;
 
         if(isLinux){
             try {
                 ObjectInputStream objectInputStream = new ObjectInputStream(
-                        new FileInputStream(linuxPasswordFile.toString()));
+                        new FileInputStream(linuxObjFile.toString()));
                 entries = (List<EntryObjects>) objectInputStream.readObject();
                 return entries;
             } catch (IOException e) {
@@ -155,6 +166,49 @@ public class UserPasswordFileActions {
             }
         }
         return entries;
+    }
+
+
+    public static void encrypt(File inputFile, File outputFile) {
+        doCrypto(Cipher.ENCRYPT_MODE, inputFile, outputFile);
+    }
+
+    public static void decrypt(File inputFile, File outputFile) {
+        doCrypto(Cipher.DECRYPT_MODE, inputFile, outputFile);
+    }
+
+    private static void doCrypto(int cipherMode, File inputFile, File outputFile){
+        try {
+
+            String salt = "5s9J";
+
+            byte[] shaKey = (salt + LoginScreen.getLoggedInUser() + LoginScreen.getUserPass()).getBytes("UTF-8");
+            MessageDigest sha = MessageDigest.getInstance("SHA-1");
+            shaKey = sha.digest(shaKey);
+            shaKey = Arrays.copyOf(shaKey, 16); // use only first 128 bit
+
+            SecretKeySpec secretKeySpec = new SecretKeySpec(shaKey, "AES");
+
+            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+            cipher.init(cipherMode, secretKeySpec);
+
+            FileInputStream inputStream = new FileInputStream(inputFile);
+            byte[] inputBytes = new byte[(int) inputFile.length()];
+            inputStream.read(inputBytes);
+
+            byte[] outputBytes = cipher.doFinal(inputBytes);
+
+            FileOutputStream outputStream = new FileOutputStream(outputFile);
+            outputStream.write(outputBytes);
+
+            inputStream.close();
+            outputStream.close();
+
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException
+                | InvalidKeyException | BadPaddingException
+                | IllegalBlockSizeException | IOException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     public static void setIsLinux(Boolean bool) { isLinux = bool; }
