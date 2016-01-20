@@ -38,6 +38,8 @@ import java.util.Optional;
 public class HomeScreen{
     private static Scene homeScene;
     private static Tab homeTab;
+    private static Tab createEntryTabPrivate;
+    private static Tab passwordGenTabPrivate;
 
     public static void createHomeScene(double width, double height){
 
@@ -63,16 +65,27 @@ public class HomeScreen{
         Menu export = new Menu("Export");
         MenuItem logout = new MenuItem("Logout");
         MenuItem exitApp = new MenuItem("Exit");
+        Menu showTabs = new Menu("Show");
 
         //create submenu items for export
         MenuItem exportEncrypted = new MenuItem("Export Passwords in cleartext (Not Encrypted)");
         MenuItem exportClear = new MenuItem("Export Passwords in ciphertext (Encrypted)");
+
+        //Create submenu items for showTabs
+        MenuItem showCreateEntry = new MenuItem("Create Entry");
+        MenuItem showPasswordGeneratorTab = new MenuItem("Password Generator");
+
+        //Add the submenu items to showTabs
+        showTabs.getItems().addAll(showCreateEntry, showPasswordGeneratorTab);
 
         //Add the submenu items to export
         export.getItems().addAll(exportEncrypted, exportClear);
 
         //Add all the buttons to the file menu
         file.getItems().addAll(export,logout,exitApp);
+
+        //Add to tabs menu
+        tabs.getItems().addAll(showTabs);
 
         //Create and add the "Edit" sub-menu options.
         MenuItem properties = new MenuItem("Properties");
@@ -98,12 +111,15 @@ public class HomeScreen{
         createEntryTab2 = CreateEntryTab.createEntryTab(createEntryTab2);
         createEntryTab2.setClosable(true);
         tabPane.getTabs().add(createEntryTab2);
+        createEntryTabPrivate = createEntryTab2;
+        final Tab test = createEntryTab2;
 
         Tab passwordGeneratorTab3 = new Tab();
         passwordGeneratorTab3.setText("Password Generator");
         passwordGeneratorTab3 = PasswordGeneratorTab.createPasswordGeneratorTab(passwordGeneratorTab3);
         passwordGeneratorTab3.setClosable(true);
         tabPane.getTabs().add(passwordGeneratorTab3);
+        passwordGenTabPrivate = passwordGeneratorTab3;
 
         //Create scene
         Scene scene = new Scene(root, width, height);
@@ -157,6 +173,23 @@ public class HomeScreen{
         });
 
         logout.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN));
+
+
+        showCreateEntry.setOnAction(event -> {
+            Tab createEntryTabWithBtn = new Tab();
+            createEntryTabWithBtn.setText("New Entry");
+            createEntryTabWithBtn = CreateEntryTab.createEntryTab(createEntryTabWithBtn);
+            createEntryTabWithBtn.setClosable(true);
+            tabPane.getTabs().add(createEntryTabWithBtn);
+        });
+
+        showPasswordGeneratorTab.setOnAction(event -> {
+            Tab passwordGeneratorWithBtn = new Tab();
+            passwordGeneratorWithBtn.setText("Password Generator");
+            passwordGeneratorWithBtn = PasswordGeneratorTab.createPasswordGeneratorTab(passwordGeneratorWithBtn);
+            passwordGeneratorWithBtn.setClosable(true);
+            tabPane.getTabs().add(passwordGeneratorWithBtn);
+        });
 
         setHomeScene(scene);
     }

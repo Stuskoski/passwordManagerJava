@@ -146,11 +146,13 @@ public class SignUpScreen {
                     if(emailExists && validEmail) {
                         if(validUser) {
                             RegisterUser.registerUserWithEmail(userTextField.getText(), pwBox.getText(), emailTextField.getText());
+                            LoginScreen.setLoggedInUser(userTextField.getText());
                             ShowViews.showHomeScreen(scene.getWidth(), scene.getHeight());
                         }
                     }else{
                         if(validUser) {
                             RegisterUser.registerUserWithoutEmail(userTextField.getText(), pwBox.getText());
+                            LoginScreen.setLoggedInUser(userTextField.getText());
                             ShowViews.showHomeScreen(scene.getWidth(), scene.getHeight());
                         }
                     }
