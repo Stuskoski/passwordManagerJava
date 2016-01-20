@@ -31,9 +31,9 @@ public class UserPasswordFileActions {
         File linuxPassDirectory = new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir");
         File linuxObjFile = new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/." + LoginScreen.getLoggedInUser() + "Obj");
 
-        File windowsDirectory = new File("UserFiles");
-        File windowsPassDirectory = new File("UserFiles/" + LoginScreen.getLoggedInUser() + "Dir");
-        File windowsObjFile = new File("UserFiles/" + LoginScreen.getLoggedInUser() + "Dir/" + LoginScreen.getLoggedInUser() + "Obj");
+        File windowsDirectory = new File(".UserFiles");
+        File windowsPassDirectory = new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir");
+        File windowsObjFile = new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/." + LoginScreen.getLoggedInUser() + "Obj");
 
 
         //This guy just handles windows and linux directory creation.
@@ -115,7 +115,7 @@ public class UserPasswordFileActions {
         File linuxObjFile = new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/." + LoginScreen.getLoggedInUser() + "Obj" );
         File linuxEncrypted = new File(".UserFiles/." + LoginScreen.getLoggedInUser()+ "Dir" + "/.EncryptedObj");
         File linuxDecrypted = new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir" + "/.Decrypted");
-        File windowsPasswordFile = new File("UserFiles/." + LoginScreen.getLoggedInUser());
+        File windowsPasswordFile = new File(".UserFiles/." + LoginScreen.getLoggedInUser());
         //Paths deletePath = new Paths(".UserFiles");
 
         //Quick check for user file if it exists, if not create it.
@@ -151,7 +151,7 @@ public class UserPasswordFileActions {
     //This function gets the objects stored in the users file.
     public static List<EntryObjects> getObjectsFromFile(File decryptedFile){
         File linuxObjFile = new File(".UserFiles/." + LoginScreen.getLoggedInUser()+"Dir/." + LoginScreen.getLoggedInUser() + "Obj" );
-        File windowsPasswordFile = new File("UserFiles/." + LoginScreen.getLoggedInUser());
+        File windowsPasswordFile = new File(".UserFiles/." + LoginScreen.getLoggedInUser());
         List<EntryObjects> entries = new ArrayList<>();
 
         if(isLinux){

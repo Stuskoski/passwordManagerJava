@@ -103,9 +103,6 @@ public class HomeScreen{
         passwordGeneratorTab3.setClosable(true);
         tabPane.getTabs().add(passwordGeneratorTab3);
 
-        //Unable to close tabs
-        //tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-
         //Create scene
         Scene scene = new Scene(root, width, height);
 
