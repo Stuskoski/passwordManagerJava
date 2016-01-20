@@ -7,6 +7,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import sample.Models.EntryObjectList;
 import sample.Models.EntryObjects;
+import sample.Views.HomeScreen;
 
 
 /**
@@ -104,6 +105,7 @@ public class CreateEntryTab {
                 newEntry.setDescription(descriptionField.getText());
                 EntryObjectList.getObjectList().add(newEntry);
                 confirmEntry.setText("Entry Successfully Added.");
+                HomeTab.refreshTable(HomeScreen.getHomeTab()); //refresh the tab in the background
                 confirmEntry.setStyle("-fx-text-fill: red; -fx-font-size: 16;");
                 nameField.setText("");
                 pwBox.setText("");

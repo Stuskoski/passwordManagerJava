@@ -37,6 +37,7 @@ import java.util.Optional;
  */
 public class HomeScreen{
     private static Scene homeScene;
+    private static Tab homeTab;
 
     public static void createHomeScene(double width, double height){
 
@@ -90,6 +91,7 @@ public class HomeScreen{
         homeTab1 = HomeTab.createHomeTab(homeTab1);
         homeTab1.setClosable(false); //Unable to close tab
         tabPane.getTabs().add(homeTab1);
+        homeTab = homeTab1;
 
         Tab createEntryTab2 = new Tab();
         createEntryTab2.setText("New Entry");
@@ -171,4 +173,5 @@ public class HomeScreen{
         return(homeScene);
     }
     public static void setHomeScene(Scene scene){ homeScene = scene; }
+    public static Tab getHomeTab(){ return homeTab; }
 }
