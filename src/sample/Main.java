@@ -3,8 +3,11 @@ package sample;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import sample.Models.UserPasswordFileActions;
 import sample.Views.*;
+
+import javax.swing.*;
 
 
 public class Main extends Application {
@@ -23,8 +26,8 @@ public class Main extends Application {
             UserPasswordFileActions.setIsLinux(false);
         }
 
-        //Create the login screen with intial height and width
-        LoginScreen.createLoginScene(475, 475);
+        //Create the login screen with initial width and height
+        LoginScreen.createLoginScene(850,675);
 
         //Get the login screen
         login = loginScreen.getLoginScene();

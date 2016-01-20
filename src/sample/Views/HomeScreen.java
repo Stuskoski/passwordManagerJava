@@ -17,7 +17,13 @@ import sample.Models.EntryObjectList;
 import sample.Models.UserPasswordFileActions;
 import sample.Views.Tabs.CreateEntryTab;
 import sample.Views.Tabs.HomeTab;
+import sample.Views.Tabs.PasswordGeneratorTab;
 
+import javax.swing.*;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,7 +35,7 @@ import java.util.Optional;
  * This is the main landing page after logging in.  It has a menu bar
  * that lets you access the functions of the whole application.
  */
-public class HomeScreen {
+public class HomeScreen{
     private static Scene homeScene;
 
     public static void createHomeScene(double width, double height){
@@ -49,6 +55,7 @@ public class HomeScreen {
         //Declare sub-menus and add to main menu.
         Menu file = new Menu("File");
         Menu edit = new Menu("Edit");
+        Menu tabs = new Menu("Tabs");
         Menu help = new Menu("Help");
 
         //Create and add the "File" sub-menu options.
@@ -75,7 +82,7 @@ public class HomeScreen {
         help.getItems().add(visitWebsite);
 
         //Add the 3 main options
-        mainMenu.getMenus().addAll(file, edit, help);
+        mainMenu.getMenus().addAll(file, edit, tabs, help);
 
         //Create the tabs and then add them
         Tab homeTab1 = new Tab();
@@ -89,6 +96,12 @@ public class HomeScreen {
         createEntryTab2 = CreateEntryTab.createEntryTab(createEntryTab2);
         createEntryTab2.setClosable(true);
         tabPane.getTabs().add(createEntryTab2);
+
+        Tab passwordGeneratorTab3 = new Tab();
+        passwordGeneratorTab3.setText("Password Generator");
+        passwordGeneratorTab3 = PasswordGeneratorTab.createPasswordGeneratorTab(passwordGeneratorTab3);
+        passwordGeneratorTab3.setClosable(true);
+        tabPane.getTabs().add(passwordGeneratorTab3);
 
         //Unable to close tabs
         //tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
@@ -114,7 +127,7 @@ public class HomeScreen {
                 try {
                     Files.deleteIfExists(new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/." + LoginScreen.getLoggedInUser() + "Obj").toPath());
                 } catch (IOException e) {
-                    System.out.println("An error occured when exiting.");
+                    System.out.println("An error occurred when exiting.");
                 }
                 System.exit(0);
             }
@@ -154,6 +167,8 @@ public class HomeScreen {
         LoginScreen.setLoggedInUser("");
         Main.getPrimaryStageVar().setScene(LoginScreen.getLoginScene());
     }
+
+
 
     public static Scene getHomeScene(){
         return(homeScene);

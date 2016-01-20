@@ -36,21 +36,9 @@ public class HomeTab {
 
         GridPane homeGrid = new GridPane();
 
-        //List<EntryObjects> userEntrie = new ArrayList<>();
-        //EntryObjects testd = new EntryObjects();
-        //testd.setName("BoA");
-        //testd.setDescription("This is my BoA Account Pass");
-        //testd.setPassword("summer123");
-        //userEntrie.add(testd);
-        //EntryObjectList.setObjectList(userEntrie);
-        //UserPasswordFileActions.writeObjectsToFile(EntryObjectList.getObjectList());
-
-        //Get the objects from the file
-        //userEntries = UserPasswordFileActions.getObjectsFromFile(new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/.EncryptedObj"));
-
-        //for(EntryObjects fileEntries : userEntries){
-        //    System.out.println(fileEntries.getName() + "\n" + fileEntries.getDescription() + "\n" + fileEntries.getPassword());
-       /// }
+        for (EntryObjects obj : EntryObjectList.getObjectList()) {
+            System.out.println(obj.getName() + "\n" + obj.getPassword() + "\n" + obj.getDescription());
+        }
 
         home.setCenter(homeGrid);
 
