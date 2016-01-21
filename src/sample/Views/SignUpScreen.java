@@ -14,7 +14,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import sample.Controllers.ShowViews;
 import sample.Main;
+import sample.Models.EntryObjectList;
+import sample.Models.LoginUser;
 import sample.Models.RegisterUser;
+import sample.Models.UserPasswordFileActions;
+
+import java.io.File;
 import java.io.IOException;
 
 
@@ -147,12 +152,16 @@ public class SignUpScreen {
                         if(validUser) {
                             RegisterUser.registerUserWithEmail(userTextField.getText(), pwBox.getText(), emailTextField.getText());
                             LoginScreen.setLoggedInUser(userTextField.getText());
+                            UserPasswordFileActions.createUserFile();
+                            EntryObjectList.checkForObjInFile(new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/.EncryptedObj"));
                             ShowViews.showHomeScreen(scene.getWidth(), scene.getHeight());
                         }
                     }else{
                         if(validUser) {
                             RegisterUser.registerUserWithoutEmail(userTextField.getText(), pwBox.getText());
                             LoginScreen.setLoggedInUser(userTextField.getText());
+                            UserPasswordFileActions.createUserFile();
+                            EntryObjectList.checkForObjInFile(new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/.EncryptedObj"));
                             ShowViews.showHomeScreen(scene.getWidth(), scene.getHeight());
                         }
                     }
