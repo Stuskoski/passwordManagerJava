@@ -33,3 +33,8 @@
 .button:hover {
     -fx-background-color: linear-gradient(#2A5058, #61a2b1);
 }
+#copyToClipboardBtn{
+    -fx-background-image: url("clipboard.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}

@@ -8,7 +8,9 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.*;
 import sample.Views.LoginScreen;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -138,10 +140,15 @@ public class PasswordGeneratorTab {
         List<HBox> passwordList = new ArrayList<>();
 
         for (int i = 0; i < numOfPass; i++){
-            HBox passBox = new HBox();
+            HBox passBox = new HBox(7);
             passBox.setAlignment(Pos.CENTER);
             Label pass = new Label(genPasswords(passLength, numbers, symbols, lower, upper));
-            Button copyPass = new Button("Copy to Clipboard");
+            Button copyPass = new Button("Copy");
+            copyPass.setId("copyToClipboardBtn");
+            copyPass.setStyle("-fx-background-image: url('clipboard.jpg');");
+            //copyPass.setStyle("-fx-background-image: url('http://icons.iconarchive.com/icons/aha-soft/desktop-buffet/128/Pizza-icon.png');" +
+              //                "  -fx-background-repeat: no-repeat;" +
+                //              "  -fx-background-position: center");
             passBox.getChildren().addAll(pass, copyPass);
 
             copyPass.setOnMouseClicked(event -> {
@@ -160,8 +167,40 @@ public class PasswordGeneratorTab {
     //Return a password as a string after generating it with the options
     private static String genPasswords(int passLength, boolean numbers, boolean symbols, boolean lower, boolean upper) {
         String password = "";
+        char[] temp;
+        String alphabetSet = "abcdefghijklmnopqrstuvwxyz";
+        String alphabetSetUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String numbersSet = "0123456789";
+        String symbolSet = "!@#$%^&*()-_=+{}[]<>,.?";
 
 
+        SecureRandom rng = new SecureRandom();
+
+        for (int i = 0; i < passLength; i++){
+            switch (rng.nextInt(4)){
+                case 0:{
+                    password = password + alphabetSet.charAt(rng.nextInt(alphabetSet.length()));
+                    break;
+                }
+                case 1:{
+                    password = password + alphabetSetUpper.charAt(rng.nextInt(alphabetSetUpper.length()));
+                    break;
+                }
+                case 2:{
+                    password = password + numbersSet.charAt(rng.nextInt(numbersSet.length()));
+                    break;
+                }
+                case 3:{
+                    password = password + symbolSet.charAt(rng.nextInt(symbolSet.length()));
+                    break;
+                }
+            }
+        }
+
+        //Reduce the generated password to the size they want
+        //temp = password.toCharArray();
+        //temp = Arrays.copyOf(temp, passLength);
+       // password = Arrays.toString(temp);
 
         return(password);
     }
