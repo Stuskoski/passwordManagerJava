@@ -7,6 +7,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.security.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -227,10 +228,24 @@ public class UserPasswordFileActions {
     public static boolean getIsLinux() { return isLinux; }
 
     public static void exportClear(File exportClearFile) {
+        String seperator = "--------------------------------------------------------";
+        try {
+            if(exportClearFile.createNewFile()){
+                System.out.println("Clear Text File Created");
+            }else{
+                System.out.println("Unable to create clear text file.");
+            }
+        } catch (IOException e) {
+            System.out.println("Error exporting plaintext password file.");
+        }
+
         for (EntryObjects clearObject: EntryObjectList.getObjectList()) {
-            System.out.println(clearObject.getName());
-            System.out.println(clearObject.getPassword());
-            System.out.println(clearObject.getDescription());
+            List<String> clearLines = Arrays.asList(seperator, clearObject.getName(), clearObject.getPassword(), clearObject.getDescription());
+            try {
+                Files.write(Paths.get(exportClearFile.toString()), clearLines, StandardOpenOption.APPEND);
+            } catch (IOException e) {
+                System.out.println("Error printing to cleartext password file.");
+            }
         }
     }
 }

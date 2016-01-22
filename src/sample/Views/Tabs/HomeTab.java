@@ -215,6 +215,10 @@ public class HomeTab {
         descriptionField.setPrefWidth(240);
 
         Button copyPassInShow = new Button("Copy");
+        copyPassInShow.setPrefHeight(20);
+        copyPassInShow.setPrefWidth(20);
+        copyPassInShow.setId("copyToClipboardBtn");
+        copyPassInShow.setStyle("-fx-background-image: url('../../clipboard.jpg');");
 
         passwordField2.setManaged(false);
         passwordField2.setVisible(false);
