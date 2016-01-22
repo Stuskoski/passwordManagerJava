@@ -1,5 +1,6 @@
 package sample.Views;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -12,6 +13,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import sample.Main;
 import sample.Models.EntryObjectList;
 import sample.Models.UserPasswordFileActions;
@@ -19,6 +22,7 @@ import sample.Views.Tabs.CreateEntryTab;
 import sample.Views.Tabs.HomeTab;
 import sample.Views.Tabs.PasswordGeneratorTab;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -78,9 +82,9 @@ public class HomeScreen{
         showTabs.setStyle("-fx-text-fill: black;");
 
         //create submenu items for export
-        MenuItem exportEncrypted = new MenuItem("Export Passwords in cleartext (Not Encrypted)");
+        MenuItem exportClear = new MenuItem("Export Passwords in cleartext (Not Encrypted)");
+        MenuItem exportEncrypted = new MenuItem("Export Passwords in ciphertext (Encrypted)");
         exportEncrypted.setStyle("-fx-text-fill: black;");
-        MenuItem exportClear = new MenuItem("Export Passwords in ciphertext (Encrypted)");
         exportClear.setStyle("-fx-text-fill: black;");
 
         //Create submenu items for showTabs
@@ -190,7 +194,6 @@ public class HomeScreen{
 
         logout.setAccelerator(new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN));
 
-
         showCreateEntry.setOnAction(event -> {
             Tab createEntryTabWithBtn = new Tab();
             createEntryTabWithBtn.setText("New Entry");
@@ -211,6 +214,30 @@ public class HomeScreen{
             UserPasswordFileActions.writeObjectsToFile(EntryObjectList.getObjectList());
             UserPasswordFileActions.encrypt(new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/." + LoginScreen.getLoggedInUser() + "Obj"),
                     new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/.EncryptedObj"));
+        });
+
+        //If user tries to close app, save info and delete file
+        Main.getPrimaryStageVar().setOnCloseRequest(event -> {
+            UserPasswordFileActions.writeObjectsToFile(EntryObjectList.getObjectList());
+            UserPasswordFileActions.encrypt(new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/." + LoginScreen.getLoggedInUser() + "Obj"),
+                    new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/.EncryptedObj"));
+            try {
+                Files.deleteIfExists(new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/." + LoginScreen.getLoggedInUser() + "Obj").toPath());
+            } catch (IOException e) {
+                System.out.println("An error occurred when exiting.");
+            }
+        });
+
+        //Exporting to a cleartext file
+        exportClear.setOnAction(event -> {
+
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.setTitle("Save File");
+                    File exportClearFile = fileChooser.showSaveDialog(Main.getPrimaryStageVar());
+                    if (exportClearFile != null) {
+                        UserPasswordFileActions.exportClear(exportClearFile);
+                        System.out.println(exportClearFile.toString());
+                    }
         });
 
         setHomeScene(scene);

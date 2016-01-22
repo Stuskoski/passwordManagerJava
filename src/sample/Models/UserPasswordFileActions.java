@@ -225,4 +225,12 @@ public class UserPasswordFileActions {
 
     public static void setIsLinux(Boolean bool) { isLinux = bool; }
     public static boolean getIsLinux() { return isLinux; }
+
+    public static void exportClear(File exportClearFile) {
+        for (EntryObjects clearObject: EntryObjectList.getObjectList()) {
+            System.out.println(clearObject.getName());
+            System.out.println(clearObject.getPassword());
+            System.out.println(clearObject.getDescription());
+        }
+    }
 }
