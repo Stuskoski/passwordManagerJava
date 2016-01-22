@@ -3,6 +3,8 @@ package sample.Views.Tabs;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.*;
 import sample.Models.EntryObjectList;
 import sample.Models.EntryObjects;
@@ -24,7 +26,7 @@ public class HomeTab {
 
         //Flow pane to hold the items inside the grid
         VBox showEntryPane = new VBox(20);
-        showEntryPane.setPrefWidth(400);
+        showEntryPane.setPrefWidth(450);
 
         //Create the default pane that will hold everything
         BorderPane home = new BorderPane();
@@ -210,6 +212,8 @@ public class HomeTab {
         TextArea descriptionField = new TextArea(obj.getDescription());
         descriptionField.setPrefWidth(200);
 
+        Button copyPassInShow = new Button("Copy");
+
         passwordField2.setManaged(false);
         passwordField2.setVisible(false);
 
@@ -232,8 +236,15 @@ public class HomeTab {
         descriptionField.setEditable(false);
 
         nameHBox.getChildren().addAll(name, nameField);
-        passwordHBox.getChildren().addAll(password, passwordField, passwordField2, hidePass);
+        passwordHBox.getChildren().addAll(password, passwordField, passwordField2, hidePass, copyPassInShow);
         descriptionHBox.getChildren().addAll(description, descriptionField);
+
+        copyPassInShow.setOnMouseClicked(e -> {
+            final Clipboard clip = Clipboard.getSystemClipboard();
+            final ClipboardContent addContent = new ClipboardContent();
+            addContent.putString(passwordField.getText());
+            clip.setContent(addContent);
+        });
 
 
         showEntryPane.getChildren().addAll(paneHeader, nameHBox, passwordHBox, descriptionHBox);

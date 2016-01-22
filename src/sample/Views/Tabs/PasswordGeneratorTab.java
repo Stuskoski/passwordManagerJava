@@ -44,7 +44,7 @@ public class PasswordGeneratorTab {
         passOptionsBox.getChildren().add(passOptionsTitle);
 
         ChoiceBox numOfPass = new ChoiceBox();
-        numOfPass.getItems().addAll(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+        numOfPass.getItems().addAll(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
         numOfPass.getSelectionModel().selectFirst();
         Label numOfPassLabel = new Label("Number of Passwords:     ");
         HBox numOfPassBox = new HBox(5);
@@ -108,6 +108,23 @@ public class PasswordGeneratorTab {
             }
         });
 
+        lowerCaseCheck.setOnMouseClicked(event -> {
+            if (!lowerCaseCheck.isSelected()) {
+                upperCaseCheck.disableProperty().set(false);
+            } else {
+                upperCaseCheck.selectedProperty().set(false);
+                upperCaseCheck.disableProperty().set(true);
+            }
+        });
+        upperCaseCheck.setOnMouseClicked(event -> {
+            if(upperCaseCheck.isSelected()){
+                lowerCaseCheck.selectedProperty().set(false);
+                lowerCaseCheck.disableProperty().set(true);
+            }else{
+                lowerCaseCheck.disableProperty().set(false);
+            }
+        });
+
         options.getChildren().addAll(passOptionsBox, numOfPassBox, passLengthBox, numbersBox, symbolsBox, lowerCaseBox, upperCaseBox, buttonBox);
 
         genPassGrid.add(options, 0, 0);
@@ -167,36 +184,89 @@ public class PasswordGeneratorTab {
     //Return a password as a string after generating it with the options
     private static String genPasswords(int passLength, boolean numbers, boolean symbols, boolean lower, boolean upper) {
         String password = "";
-        char[] temp;
         String alphabetSet = "abcdefghijklmnopqrstuvwxyz";
         String alphabetSetUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String numbersSet = "0123456789";
-        String symbolSet = "!@#$%^&*()-_=+{}[]<>,.?";
-
+        String symbolSet = "!@#$%^&*()-_=+{}[]<>,.?\\";
 
         SecureRandom rng = new SecureRandom();
 
-        for (int i = 0; i < passLength; i++){
-            switch (rng.nextInt(4)){
-                case 0:{
-                    password = password + alphabetSet.charAt(rng.nextInt(alphabetSet.length()));
-                    break;
+        if(numbers && symbols) {
+            for (int i = 0; i < passLength; i++) {
+                switch (rng.nextInt(4)) {
+                    case 0: {
+                        password = password + alphabetSet.charAt(rng.nextInt(alphabetSet.length()));
+                        break;
+                    }
+                    case 1: {
+                        password = password + alphabetSetUpper.charAt(rng.nextInt(alphabetSetUpper.length()));
+                        break;
+                    }
+                    case 2: {
+                        password = password + numbersSet.charAt(rng.nextInt(numbersSet.length()));
+                        break;
+                    }
+                    case 3: {
+                        password = password + symbolSet.charAt(rng.nextInt(symbolSet.length()));
+                        break;
+                    }
                 }
-                case 1:{
-                    password = password + alphabetSetUpper.charAt(rng.nextInt(alphabetSetUpper.length()));
-                    break;
+            }
+        }else if(numbers && !symbols) {
+            for (int i = 0; i < passLength; i++) {
+                switch (rng.nextInt(3)) {
+                    case 0: {
+                        password = password + alphabetSet.charAt(rng.nextInt(alphabetSet.length()));
+                        break;
+                    }
+                    case 1: {
+                        password = password + alphabetSetUpper.charAt(rng.nextInt(alphabetSetUpper.length()));
+                        break;
+                    }
+                    case 2: {
+                        password = password + numbersSet.charAt(rng.nextInt(numbersSet.length()));
+                        break;
+                    }
                 }
-                case 2:{
-                    password = password + numbersSet.charAt(rng.nextInt(numbersSet.length()));
-                    break;
+            }
+        }else if (!numbers && symbols){
+            for (int i = 0; i < passLength; i++) {
+                switch (rng.nextInt(3)) {
+                    case 0: {
+                        password = password + alphabetSet.charAt(rng.nextInt(alphabetSet.length()));
+                        break;
+                    }
+                    case 1: {
+                        password = password + alphabetSetUpper.charAt(rng.nextInt(alphabetSetUpper.length()));
+                        break;
+                    }
+                    case 2: {
+                        password = password + symbolSet.charAt(rng.nextInt(symbolSet.length()));
+                        break;
+                    }
                 }
-                case 3:{
-                    password = password + symbolSet.charAt(rng.nextInt(symbolSet.length()));
-                    break;
+            }
+        }else{
+            for (int i = 0; i < passLength; i++) {
+                switch (rng.nextInt(2)) {
+                    case 0: {
+                        password = password + alphabetSet.charAt(rng.nextInt(alphabetSet.length()));
+                        break;
+                    }
+                    case 1: {
+                        password = password + alphabetSetUpper.charAt(rng.nextInt(alphabetSetUpper.length()));
+                        break;
+                    }
                 }
             }
         }
 
+        if(lower){
+            password = password.toLowerCase();
+        }
+        if(upper){
+            password = password.toUpperCase();
+        }
         //Reduce the generated password to the size they want
         //temp = password.toCharArray();
         //temp = Arrays.copyOf(temp, passLength);
