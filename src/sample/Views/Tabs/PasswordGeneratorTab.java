@@ -6,11 +6,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.*;
-import sample.Views.LoginScreen;
-
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -23,7 +20,12 @@ public class PasswordGeneratorTab {
         GridPane genPassGrid = new GridPane();
         BorderPane genPassPane = new BorderPane();
         VBox options = new VBox(20);
-        VBox passwords = new VBox(5);
+        VBox passwords = new VBox(8);
+
+        options.setId("paneStyle");
+        passwords.setId("paneStyle");
+
+       // VBox.setVgrow(passwords, Priority.ALWAYS);
 
         genPassGrid.setHgap(10);
         genPassGrid.setVgap(10);
@@ -45,6 +47,7 @@ public class PasswordGeneratorTab {
 
         ChoiceBox numOfPass = new ChoiceBox();
         numOfPass.getItems().addAll(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
+        numOfPass.setId("makeBoxesColor");
         numOfPass.getSelectionModel().selectFirst();
         Label numOfPassLabel = new Label("Number of Passwords:     ");
         HBox numOfPassBox = new HBox(5);
@@ -53,7 +56,8 @@ public class PasswordGeneratorTab {
 
         ChoiceBox passLength = new ChoiceBox();
         passLength.getItems().addAll(5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
-        passLength.getSelectionModel().selectFirst();
+        passLength.setId("makeBoxesColor");
+        passLength.getSelectionModel().select(3);
         Label passLengthLabel = new Label("Password Length:            ");
         HBox passLengthBox = new HBox(5);
         passLengthBox.getChildren().addAll(passLengthLabel, passLength);
@@ -84,10 +88,16 @@ public class PasswordGeneratorTab {
         upperCaseBox.getChildren().addAll(upperCase, upperCaseCheck);
 
         Button genPassBtn = new Button("Generate Passwords");
+        genPassBtn.setId("dark-btn");
         HBox buttonBox = new HBox();
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.getChildren().add(genPassBtn);
         VBox.setVgrow(buttonBox, Priority.ALWAYS);
+
+        Label passwordStrength = new Label("Password Strength");
+        HBox passwordStrengthMeterBox = new HBox();
+        passwordStrengthMeterBox.setAlignment(Pos.CENTER);
+        passwordStrengthMeterBox.getChildren().add(passwordStrength);
 
 
         genPassBtn.setOnMouseClicked(event -> {
@@ -125,7 +135,7 @@ public class PasswordGeneratorTab {
             }
         });
 
-        options.getChildren().addAll(passOptionsBox, numOfPassBox, passLengthBox, numbersBox, symbolsBox, lowerCaseBox, upperCaseBox, buttonBox);
+        options.getChildren().addAll(passOptionsBox, numOfPassBox, passLengthBox, numbersBox, symbolsBox, lowerCaseBox, upperCaseBox, buttonBox, passwordStrengthMeterBox);
 
         genPassGrid.add(options, 0, 0);
 
@@ -139,10 +149,10 @@ public class PasswordGeneratorTab {
 
         genPassGrid.add(passwords, 1, 0);
 
-        options.setStyle("-fx-background-color: DAE6F3;");
+        //options.setStyle("-fx-background-color: DAE6F3;");
         options.setPrefWidth(300);
         options.setPrefHeight(450);
-        passwords.setStyle("-fx-background-color: DAE6F3;");
+       // passwords.setStyle("-fx-background-color: DAE6F3;");
         passwords.setPrefWidth(300);
         passwords.setPrefHeight(450);
 
@@ -160,9 +170,11 @@ public class PasswordGeneratorTab {
             HBox passBox = new HBox(7);
             passBox.setAlignment(Pos.CENTER);
             Label pass = new Label(genPasswords(passLength, numbers, symbols, lower, upper));
-            Button copyPass = new Button("Copy");
+            Button copyPass = new Button("");
+            copyPass.setPrefHeight(20);
+            copyPass.setPrefWidth(20);
             copyPass.setId("copyToClipboardBtn");
-            copyPass.setStyle("-fx-background-image: url('clipboard.jpg');");
+            copyPass.setStyle("-fx-background-image: url('../../clipboard.jpg');");
             //copyPass.setStyle("-fx-background-image: url('http://icons.iconarchive.com/icons/aha-soft/desktop-buffet/128/Pizza-icon.png');" +
               //                "  -fx-background-repeat: no-repeat;" +
                 //              "  -fx-background-position: center");

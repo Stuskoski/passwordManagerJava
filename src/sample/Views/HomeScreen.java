@@ -49,6 +49,10 @@ public class HomeScreen{
         TabPane tabPane = new TabPane();
         //FlowPane flow = new FlowPane(Orientation.HORIZONTAL);
 
+        mainMenu.setId("mainMenu");
+        tabPane.setId("tabPane");
+
+
         //topContainer.getChildren().add(flow);
         topContainer.getChildren().add(mainMenu);
         topContainer.getChildren().add(tabPane);
@@ -62,18 +66,28 @@ public class HomeScreen{
         Menu help = new Menu("Help");
 
         //Create and add the "File" sub-menu options.
+        MenuItem save = new MenuItem("Save");
+        save.setStyle("-fx-text-fill: black;");
         Menu export = new Menu("Export");
+        export.setStyle("-fx-text-fill: black;");
         MenuItem logout = new MenuItem("Logout");
+        logout.setStyle("-fx-text-fill: black;");
         MenuItem exitApp = new MenuItem("Exit");
+        exitApp.setStyle("-fx-text-fill: black;");
         Menu showTabs = new Menu("Show");
+        showTabs.setStyle("-fx-text-fill: black;");
 
         //create submenu items for export
         MenuItem exportEncrypted = new MenuItem("Export Passwords in cleartext (Not Encrypted)");
+        exportEncrypted.setStyle("-fx-text-fill: black;");
         MenuItem exportClear = new MenuItem("Export Passwords in ciphertext (Encrypted)");
+        exportClear.setStyle("-fx-text-fill: black;");
 
         //Create submenu items for showTabs
         MenuItem showCreateEntry = new MenuItem("Create Entry");
+        showCreateEntry.setStyle("-fx-text-fill: black;");
         MenuItem showPasswordGeneratorTab = new MenuItem("Password Generator");
+        showPasswordGeneratorTab.setStyle("-fx-text-fill: black;");
 
         //Add the submenu items to showTabs
         showTabs.getItems().addAll(showCreateEntry, showPasswordGeneratorTab);
@@ -82,18 +96,20 @@ public class HomeScreen{
         export.getItems().addAll(exportEncrypted, exportClear);
 
         //Add all the buttons to the file menu
-        file.getItems().addAll(export,logout,exitApp);
+        file.getItems().addAll(save, export,logout,exitApp);
 
         //Add to tabs menu
         tabs.getItems().addAll(showTabs);
 
         //Create and add the "Edit" sub-menu options.
         MenuItem properties = new MenuItem("Properties");
+        properties.setStyle("-fx-text-fill: black;");
         edit.getItems().add(properties);
 
         //Create and add the "Help" sub-menu options.
         MenuItem visitWebsite = new MenuItem("Visit Website");
         help.getItems().add(visitWebsite);
+        visitWebsite.setStyle("-fx-text-fill: black;");
 
         //Add the 3 main options
         mainMenu.getMenus().addAll(file, edit, tabs, help);
@@ -189,6 +205,12 @@ public class HomeScreen{
             passwordGeneratorWithBtn = PasswordGeneratorTab.createPasswordGeneratorTab(passwordGeneratorWithBtn);
             passwordGeneratorWithBtn.setClosable(true);
             tabPane.getTabs().add(passwordGeneratorWithBtn);
+        });
+
+        save.setOnAction(event -> {
+            UserPasswordFileActions.writeObjectsToFile(EntryObjectList.getObjectList());
+            UserPasswordFileActions.encrypt(new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/." + LoginScreen.getLoggedInUser() + "Obj"),
+                    new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/.EncryptedObj"));
         });
 
         setHomeScene(scene);

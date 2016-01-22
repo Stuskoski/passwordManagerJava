@@ -8,8 +8,6 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.*;
 import sample.Models.EntryObjectList;
 import sample.Models.EntryObjects;
-import sample.Models.GetUsersPasswordEntries;
-import sample.Models.UserPasswordFileActions;
 import sample.Views.LoginScreen;
 import java.util.Optional;
 
@@ -92,15 +90,17 @@ public class HomeTab {
         }
 
         TreeView<Label> treeView = new TreeView<>(root);
+        treeView.setId("treeStyle");
 
         homeGrid.add(treeView, 0, 0);
 
         Button refresh = new Button("Refresh");
+        refresh.setId("dark-btn");
         refresh.setOnAction(event -> refreshTable(homeTab));
         homeGrid.add(refresh, 0, 1);
 
 
-        showEntryPane.setStyle("-fx-background-color: DAE6F3;");
+        showEntryPane.setId("paneStyle");
 
         showEntryPane.setAlignment(Pos.TOP_CENTER);
         showEntryPane.getChildren().add(paneHeader);
@@ -147,6 +147,7 @@ public class HomeTab {
         passwordField2.setVisible(false);
 
         CheckBox hidePass = new CheckBox("Hide");
+        hidePass.setStyle("-fx-text-fill: white");
 
         //Bind the text field to the check box when selected
         passwordField2.managedProperty().bind(hidePass.selectedProperty());
@@ -169,6 +170,7 @@ public class HomeTab {
         descriptionHBox.getChildren().addAll(description, descriptionField);
 
         Button submit = new Button("Submit Changes");
+        submit.setId("dark-btn");
 
         submit.setOnMouseClicked(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -210,7 +212,7 @@ public class HomeTab {
         TextField passwordField = new TextField(obj.getPassword());
         PasswordField passwordField2 = new PasswordField();
         TextArea descriptionField = new TextArea(obj.getDescription());
-        descriptionField.setPrefWidth(200);
+        descriptionField.setPrefWidth(240);
 
         Button copyPassInShow = new Button("Copy");
 
@@ -218,6 +220,7 @@ public class HomeTab {
         passwordField2.setVisible(false);
 
         CheckBox hidePass = new CheckBox("Hide");
+        hidePass.setStyle("-fx-text-fill: white");
 
         //Bind the text field to the check box when selected
         passwordField2.managedProperty().bind(hidePass.selectedProperty());

@@ -1,11 +1,11 @@
 .root {
-    -fx-background-image: url("background.jpg");
+    -fx-background-image: url("carbonWall.png");
 }
 .label {
     -fx-font-size: 12px;
     -fx-font-weight: bold;
-    -fx-text-fill: #333333;
-    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+    -fx-text-fill: #ffffff;
+    /*-fx-effect: dropshadow( one-pass-box , rgba(229,230,0,0.9) , 0, 0.0 , 0 , 1);*/
 }
 #sceneTitle{
     -fx-font-size: 32px;
@@ -16,25 +16,65 @@
 #actionTarget{
     -fx-fill: FIREBRICK;
     -fx-font-weight: bold;
-    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+    /*-fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );*/
 }
 #userNameAvailable{
     -fx-fill: green;
     -fx-font-weight: bold;
     -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
 }
-.button {
+#dark-btn {
+    -fx-background-color:
+            #090a0c,
+            linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+            linear-gradient(#20262b, #191d22),
+            radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 0,1,2,0;
     -fx-text-fill: white;
-    -fx-font-family: "Arial Narrow";
-    -fx-font-weight: bold;
-    -fx-background-color: linear-gradient(#61a2b1, #2A5058);
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-font-size: 12px;
+    -fx-padding: 10 20 10 20;
 }
-.button:hover {
-    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+#dark-btn:hover {
+    -fx-background-color: linear-gradient(#20262b, #191d22);
 }
 #copyToClipboardBtn{
-    -fx-background-image: url("clipboard.png");
+    -fx-background-image: url("clipboard2.png") !important;
     -fx-background-repeat: no-repeat;
-    -fx-background-position: center;
+    -fx-background-color: transparent !important;
+}
+#paneStyle{
+    -fx-background-color: #1a1a1a !important;
+    -fx-background-insets: 0,1,4,5,6 !important;
+    -fx-background-radius: 9,8,5,4,3 !important;
+}
+
+#treeStyle .tree-cell{
+    -fx-background-color: #1a1a1a !important;
+}
+#treeStyle:focused{
+    -fx-border-color: white;
+}
+#makeBoxesColor .label{
+    -fx-text-fill: black;
+}
+#showPassText{
+    -fx-text-fill: white;
+}
+#mainMenu{
+    -fx-background-color: #1a1a1a !important;
+}
+.menuBar .menu-item{
+    -fx-text-fill: black;
+}
+.ui-menuitem-text{-fx-text-fill: black !important;}
+
+.menu-button{
+    -fx-text-fill: black;
+}
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #1a1a1a;
 }

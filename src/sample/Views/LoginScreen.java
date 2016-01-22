@@ -100,6 +100,9 @@ public class LoginScreen {
         Button loginBtn = new Button("Log in");
         Button newUserBtn = new Button("New User");
 
+        loginBtn.setId("dark-btn");
+        newUserBtn.setId("dark-btn");
+
         //Creates a Hbox layout pane named hbBtn with spacing of 10 pixels
         HBox hbBtn = new HBox(10);
 

@@ -97,6 +97,8 @@ public class SignUpScreen {
         //Creates a button called btn with the text "Log in"
         Button register = new Button("Register");
         Button back = new Button("Back");
+        register.setId("dark-btn");
+        back.setId("dark-btn");
 
         //Creates a Hbox layout pane named hbBtn with spacing of 10 pixels
         HBox hbBtn = new HBox(10);

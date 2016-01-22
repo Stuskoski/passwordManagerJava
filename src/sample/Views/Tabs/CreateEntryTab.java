@@ -54,6 +54,7 @@ public class CreateEntryTab {
 
         //Add the check box
         CheckBox showPassBox = new CheckBox("Show");
+        showPassBox.setId("showPassText");
         homeGrid.add(showPassBox, 2,3);
 
         //Bind the text field to the check box when selected
@@ -82,6 +83,8 @@ public class CreateEntryTab {
 
         Button clearBtn = new Button("Clear Entry");
         Button addBtn = new Button("Add Entry");
+        clearBtn.setId("dark-btn");
+        addBtn.setId("dark-btn");
         HBox holdBtns = new HBox(10);
         holdBtns.getChildren().addAll(addBtn, clearBtn);
 
