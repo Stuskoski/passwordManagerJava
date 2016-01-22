@@ -230,17 +230,25 @@ public class UserPasswordFileActions {
     public static void exportClear(File exportClearFile) {
         String seperator = "--------------------------------------------------------";
         try {
-            if(exportClearFile.createNewFile()){
-                System.out.println("Clear Text File Created");
+            if(!exportClearFile.exists()) {
+                if (exportClearFile.createNewFile()) {
+                    System.out.println("Clear Text File Created");
+                } else {
+                    System.out.println("Unable to create clear text file.");
+                }
             }else{
-                System.out.println("Unable to create clear text file.");
+                if(exportClearFile.delete() && exportClearFile.createNewFile()){
+                    System.out.println("File deleted and recreated.");
+                }else{
+                    System.out.println("Error when deleting and recreating file.");
+                }
             }
         } catch (IOException e) {
             System.out.println("Error exporting plaintext password file.");
         }
 
         for (EntryObjects clearObject: EntryObjectList.getObjectList()) {
-            List<String> clearLines = Arrays.asList(seperator, clearObject.getName(), clearObject.getPassword(), clearObject.getDescription());
+            List<String> clearLines = Arrays.asList(seperator, "Name: " + clearObject.getName(), "Password: " + clearObject.getPassword(), "Description: " + clearObject.getDescription());
             try {
                 Files.write(Paths.get(exportClearFile.toString()), clearLines, StandardOpenOption.APPEND);
             } catch (IOException e) {
