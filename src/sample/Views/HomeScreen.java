@@ -18,6 +18,7 @@ import javafx.stage.FileChooser;
 import sample.Main;
 import sample.Models.EntryObjectList;
 import sample.Models.UserPasswordFileActions;
+import sample.Views.Tabs.BackupTab;
 import sample.Views.Tabs.CreateEntryTab;
 import sample.Views.Tabs.HomeTab;
 import sample.Views.Tabs.PasswordGeneratorTab;
@@ -44,6 +45,7 @@ public class HomeScreen{
     private static Tab homeTab;
     private static Tab createEntryTabPrivate;
     private static Tab passwordGenTabPrivate;
+    private static Tab backupTabPrivate;
 
     public static void createHomeScene(double width, double height){
 
@@ -68,6 +70,7 @@ public class HomeScreen{
         Menu edit = new Menu("Edit");
         Menu tabs = new Menu("Tabs");
         Menu help = new Menu("Help");
+        Menu backup = new Menu("Backup");
 
         //Create and add the "File" sub-menu options.
         MenuItem save = new MenuItem("Save");
@@ -81,6 +84,12 @@ public class HomeScreen{
         Menu showTabs = new Menu("Show");
         showTabs.setStyle("-fx-text-fill: black;");
 
+        //Create submenu items for backup
+        MenuItem importBackup = new MenuItem("Import Backup File");
+        MenuItem exportBackup = new MenuItem("Export Backup File");
+        importBackup.setStyle("-fx-text-fill: black;");
+        exportBackup.setStyle("-fx-text-fill: black;");
+
         //create submenu items for export
         MenuItem exportClear = new MenuItem("Export Passwords in cleartext (Not Encrypted)");
         MenuItem exportEncrypted = new MenuItem("Export Passwords in ciphertext (Encrypted)");
@@ -92,9 +101,14 @@ public class HomeScreen{
         showCreateEntry.setStyle("-fx-text-fill: black;");
         MenuItem showPasswordGeneratorTab = new MenuItem("Password Generator");
         showPasswordGeneratorTab.setStyle("-fx-text-fill: black;");
+        MenuItem showBackupTab = new MenuItem("Backup");
+        showBackupTab.setStyle("-fx-text-fill: black;");
+
+        //Add the submenu items to backup
+        backup.getItems().addAll(importBackup, exportBackup);
 
         //Add the submenu items to showTabs
-        showTabs.getItems().addAll(showCreateEntry, showPasswordGeneratorTab);
+        showTabs.getItems().addAll(showCreateEntry, showPasswordGeneratorTab, showBackupTab);
 
         //Add the submenu items to export
         export.getItems().addAll(exportEncrypted, exportClear);
@@ -116,7 +130,7 @@ public class HomeScreen{
         visitWebsite.setStyle("-fx-text-fill: black;");
 
         //Add the 3 main options
-        mainMenu.getMenus().addAll(file, edit, tabs, help);
+        mainMenu.getMenus().addAll(file, edit, tabs, backup, help);
 
         //Create the tabs and then add them
         Tab homeTab1 = new Tab();
@@ -140,6 +154,13 @@ public class HomeScreen{
         passwordGeneratorTab3.setClosable(true);
         tabPane.getTabs().add(passwordGeneratorTab3);
         passwordGenTabPrivate = passwordGeneratorTab3;
+
+        Tab backupTab4 = new Tab();
+        backupTab4.setText("Backup");
+        backupTab4 = BackupTab.createBackupTab(backupTab4);
+        backupTab4.setClosable(true);
+        tabPane.getTabs().add(backupTab4);
+        backupTabPrivate = backupTab4;
 
         //Create scene
         Scene scene = new Scene(root, width, height);
@@ -208,6 +229,14 @@ public class HomeScreen{
             passwordGeneratorWithBtn = PasswordGeneratorTab.createPasswordGeneratorTab(passwordGeneratorWithBtn);
             passwordGeneratorWithBtn.setClosable(true);
             tabPane.getTabs().add(passwordGeneratorWithBtn);
+        });
+
+        showBackupTab.setOnAction(event1 -> {
+            Tab backupTabWithBtn = new Tab();
+            backupTabWithBtn.setText("Backup");
+            backupTabWithBtn = BackupTab.createBackupTab(backupTabWithBtn);
+            backupTabWithBtn.setClosable(true);
+            tabPane.getTabs().add(backupTabWithBtn);
         });
 
         save.setOnAction(event -> {

@@ -51,6 +51,12 @@
     -fx-background-insets: 0,1,4,5,6 !important;
     -fx-background-radius: 9,8,5,4,3 !important;
 }
+#backupVBox{
+    -fx-background-color: #1a1a1a !important;
+    -fx-background-insets: 0,1,4,5,6 !important;
+    -fx-background-radius: 9,8,5,4,3 !important;
+    -fx-padding: 40, 40, 50, 50;
+}
 
 #treeStyle .tree-cell{
     -fx-background-color: #1a1a1a !important;

@@ -32,37 +32,6 @@ public class HomeTab {
         Label paneHeader = new Label("Select An Entry");
         paneHeader.setStyle("-fx-font-size: 16;");
 
-        try {
-            DropboxConnect.authDropbox();
-            File testfile = new File("testing");
-            // Make the API call to upload the file.
-            DbxFiles.FileMetadata metadata = null;
-            try {
-                InputStream in = new FileInputStream("dropboxAppAuth");
-                try {
-                    metadata = DropboxConnect.getDropboxConnection().files.uploadBuilder("/test").run(in);
-                } finally {
-                    in.close();
-                }
-            }
-            catch (DbxFiles.UploadException ex) {
-                System.out.println("Error uploading to Dropbox: " + ex.getMessage());
-            }
-            catch (DbxException ex) {
-                System.out.println("Error uploading to Dropbox: " + ex.getMessage());
-            }
-            catch (IOException ex) {
-                System.out.println("Error reading from file \"" + "dropboxAppAuth" + "\": " + ex.getMessage());
-            }
-
-            System.out.print(metadata.toStringMultiline());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (DbxException e) {
-            e.printStackTrace();
-        }
-
         //Flow pane to hold the items inside the grid
         VBox showEntryPane = new VBox(20);
         showEntryPane.setPrefWidth(450);

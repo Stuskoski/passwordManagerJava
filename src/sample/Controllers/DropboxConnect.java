@@ -19,7 +19,6 @@ public class DropboxConnect {
 
     private static DbxClientV2 dropboxConnection;
     private static final String dropboxAccess = "OnH1oNyF_1sAAAAAAAB5LAXncmdSYiGQbjaTTAsZ5EHaskFCBtLEpNrsLXNE7UBi";
-    private static String test;
 
     public static void authDropbox()
             throws IOException, DbxException {
