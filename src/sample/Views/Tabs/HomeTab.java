@@ -1,15 +1,25 @@
 package sample.Views.Tabs;
 
+import com.dropbox.core.DbxException;
+import com.dropbox.core.v2.DbxFiles;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.*;
+import sample.Controllers.DropboxConnect;
 import sample.Models.EntryObjectList;
 import sample.Models.EntryObjects;
 import sample.Views.LoginScreen;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.Optional;
+import sample.Controllers.*;
 
 /**
  * Created by augustus on 1/18/16.
@@ -21,6 +31,37 @@ public class HomeTab {
         //Header to be used later, at the bottom of the code
         Label paneHeader = new Label("Select An Entry");
         paneHeader.setStyle("-fx-font-size: 16;");
+
+        try {
+            DropboxConnect.authDropbox();
+            File testfile = new File("testing");
+            // Make the API call to upload the file.
+            DbxFiles.FileMetadata metadata = null;
+            try {
+                InputStream in = new FileInputStream("dropboxAppAuth");
+                try {
+                    metadata = DropboxConnect.getDropboxConnection().files.uploadBuilder("/test").run(in);
+                } finally {
+                    in.close();
+                }
+            }
+            catch (DbxFiles.UploadException ex) {
+                System.out.println("Error uploading to Dropbox: " + ex.getMessage());
+            }
+            catch (DbxException ex) {
+                System.out.println("Error uploading to Dropbox: " + ex.getMessage());
+            }
+            catch (IOException ex) {
+                System.out.println("Error reading from file \"" + "dropboxAppAuth" + "\": " + ex.getMessage());
+            }
+
+            System.out.print(metadata.toStringMultiline());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
 
         //Flow pane to hold the items inside the grid
         VBox showEntryPane = new VBox(20);
