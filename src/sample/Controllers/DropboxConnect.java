@@ -19,67 +19,87 @@ public class DropboxConnect {
 
     private static DbxClientV2 dropboxConnection;
     private static final String dropboxAccess = "OnH1oNyF_1sAAAAAAAB5LAXncmdSYiGQbjaTTAsZ5EHaskFCBtLEpNrsLXNE7UBi";
+    private static String test;
 
     public static void authDropbox()
             throws IOException, DbxException {
 
+        DbxAuthInfo appText;
         DbxAppInfo appInfo;
-        try {
-            appInfo = DbxAppInfo.Reader.readFromFile(new File("dropboxAppAuth"));
+        if(new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/dropboxAuthKey").exists()){
+            try {
+                appText = DbxAuthInfo.Reader.readFromFile(new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/dropboxAuthKey"));
+                DbxRequestConfig dbxRequestConfig = new DbxRequestConfig(
+                        "dropbox/passwordManager-Stus", Locale.getDefault().toString());
+
+                DbxClientV2 connectionV2 = new DbxClientV2(dbxRequestConfig, appText.accessToken, appText.host);
+
+                setDropboxConnection(connectionV2);
+            } catch (JsonReader.FileLoadException e) {
+                e.printStackTrace();
+            }
+        }else{
+            try {
+                appInfo = DbxAppInfo.Reader.readFromFile(new File("dropboxAppAuth"));
+
+                DbxRequestConfig dbxRequestConfig = new DbxRequestConfig(
+                        "dropbox/passwordManager-Stus", Locale.getDefault().toString());
+
+                DbxWebAuthNoRedirect webAuth = new DbxWebAuthNoRedirect(dbxRequestConfig, appInfo);
+
+                String authorizeUrl = webAuth.start();
+                System.out.println("1. Go to " + authorizeUrl);
+                System.out.println("2. Click \"Allow\" (you might have to log in first).");
+                System.out.println("3. Copy the authorization code.");
+                System.out.print("Enter the authorization code here: ");
+
+                String code = new BufferedReader(new InputStreamReader(System.in)).readLine();
+                if (code == null) {
+                    System.exit(1); return;
+                }
+                code = code.trim();
+
+                DbxAuthFinish authFinish;
+                try {
+                    authFinish = webAuth.finish(code);
+                }
+                catch (DbxException ex) {
+                    System.err.println("Error in DbxWebAuth.start: " + ex.getMessage());
+                    System.exit(1); return;
+                }
+
+                System.out.println("Authorization complete.");
+                System.out.println("- User ID: " + authFinish.userId);
+                System.out.println("- Access Token: " + authFinish.accessToken);
+
+                // Save auth information to output file.
+                DbxAuthInfo authInfo = new DbxAuthInfo(authFinish.accessToken, appInfo.host);
+
+                DbxClientV2 connectionV2 = new DbxClientV2(dbxRequestConfig, dropboxAccess);
+
+                setDropboxConnection(connectionV2);
+                try {
+                    DbxAuthInfo.Writer.writeToFile(authInfo, new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/dropboxAuthKey"));
+                    System.out.println("Saved authorization information to \"" + new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/dropboxAuthKey").toString() + "\".");
+                }
+                catch (IOException ex) {
+                    System.err.println("Error saving to <auth-file-out>: " + ex.getMessage());
+                    System.err.println("Dumping to stderr instead:");
+                    DbxAuthInfo.Writer.writeToStream(authInfo, System.err);
+                    System.exit(1); return;
+                }
+            }
+            catch (JsonReader.FileLoadException ex) {
+                System.err.println("Error reading <app-info-file>: " + ex.getMessage());
+                System.exit(1); return;
+            }
         }
-        catch (JsonReader.FileLoadException ex) {
-            System.err.println("Error reading <app-info-file>: " + ex.getMessage());
-            System.exit(1); return;
-        }
 
 
-        DbxRequestConfig dbxRequestConfig = new DbxRequestConfig(
-                "dropbox/passwordManager-Stus", Locale.getDefault().toString());
-
-        DbxWebAuthNoRedirect webAuth = new DbxWebAuthNoRedirect(dbxRequestConfig, appInfo);
-
-        String authorizeUrl = webAuth.start();
-        System.out.println("1. Go to " + authorizeUrl);
-        System.out.println("2. Click \"Allow\" (you might have to log in first).");
-        System.out.println("3. Copy the authorization code.");
-        System.out.print("Enter the authorization code here: ");
-
-        String code = new BufferedReader(new InputStreamReader(System.in)).readLine();
-        if (code == null) {
-            System.exit(1); return;
-        }
-        code = code.trim();
-
-        DbxAuthFinish authFinish;
-        try {
-            authFinish = webAuth.finish(code);
-        }
-        catch (DbxException ex) {
-            System.err.println("Error in DbxWebAuth.start: " + ex.getMessage());
-            System.exit(1); return;
-        }
-
-        System.out.println("Authorization complete.");
-        System.out.println("- User ID: " + authFinish.userId);
-        System.out.println("- Access Token: " + authFinish.accessToken);
-
-        // Save auth information to output file.
-        DbxAuthInfo authInfo = new DbxAuthInfo(authFinish.accessToken, appInfo.host);
-        try {
-            DbxAuthInfo.Writer.writeToFile(authInfo, new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/dropboxAuthKey"));
-            System.out.println("Saved authorization information to \"" + new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/dropboxAuthKey").toString() + "\".");
-        }
-        catch (IOException ex) {
-            System.err.println("Error saving to <auth-file-out>: " + ex.getMessage());
-            System.err.println("Dumping to stderr instead:");
-            DbxAuthInfo.Writer.writeToStream(authInfo, System.err);
-            System.exit(1); return;
-        }
 
 
-        DbxClientV2 connectionV2 = new DbxClientV2(dbxRequestConfig, dropboxAccess);
 
-        setDropboxConnection(connectionV2);
+
     }
 
     public static void setDropboxConnection(DbxClientV2 connection){
