@@ -11,8 +11,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import sample.Controllers.DropboxConnect;
+import sample.Views.HomeScreen;
 import sample.Views.LoginScreen;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,9 +23,6 @@ import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by augustus on 1/23/16.
@@ -33,9 +30,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class BackupTab {
     private static Label statusMsg = new Label("");
+    private static GridPane backupGrid = new GridPane();
 
     public static Tab createBackupTab(Tab backupTab4) {
-        GridPane backupGrid = new GridPane();
+        //GridPane backupGrid = new GridPane();
         BorderPane backupPane = new BorderPane();
         VBox backupVBox = new VBox(20);
         HBox titleHolder = new HBox();
@@ -87,13 +85,9 @@ public class BackupTab {
                             timer.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
-                                    Platform.runLater(new Runnable() {
-                                        public void run() {
-                                            removeWarning();
-                                        }
-                                    });
+                                    Platform.runLater(BackupTab::removeWarning);
                                 }
-                            }, 5000);
+                            }, 10000);
 
                         }
                     }
@@ -121,6 +115,19 @@ public class BackupTab {
                 if (result.get() == ButtonType.OK) {
                     try {
                         Files.deleteIfExists(filePath);
+                        backupGrid.getChildren().clear();
+                        statusMsg.setText("Dropbox Authentication Cleared.");
+                        BackupTab.createBackupTab(HomeScreen.getBackupTab());
+
+                        //Timer to remove the msg after 5 seconds
+                        Timer timer = new Timer();
+                        timer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                Platform.runLater(BackupTab::removeWarning);
+                            }
+                        }, 10000);
+                        //BackupTab.createBackupTab(HomeScreen.getBackupTab());
                     } catch (IOException e) {
                         System.out.println("Unable to delete dropbox authentication.");
                     }
@@ -128,6 +135,22 @@ public class BackupTab {
             });
         }else{
 
+            //Button authDropBoxBtn = new Button("Authenticate With Dropbox");
+
+            //backupVBox.getChildren().add(authDropBoxBtn);
+
+            //backupGrid.add(backupVBox, 0, 0);
+            //backupGrid.add(statusMsg, 0 , 1);
+
+            try {
+                DropboxConnect.authDropbox();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (DbxException e) {
+                e.printStackTrace();
+            }
+
+            //BackupTab.createBackupTab(HomeScreen.getBackupTab());
         }
 
 
@@ -143,4 +166,5 @@ public class BackupTab {
     private static void removeWarning() {
         statusMsg.setText("");
     }
+    public static GridPane getBackupGrid(){ return backupGrid; }
 }

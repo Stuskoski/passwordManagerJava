@@ -285,4 +285,5 @@ public class HomeScreen{
     }
     public static void setHomeScene(Scene scene){ homeScene = scene; }
     public static Tab getHomeTab(){ return homeTab; }
+    public static Tab getBackupTab(){ return backupTabPrivate; }
 }
