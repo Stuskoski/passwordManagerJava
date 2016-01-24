@@ -17,7 +17,7 @@ public class Main extends Application {
     public void start(Stage primaryStageStart) {
         //Create variables/objects
         Scene login;
-        LoginScreen loginScreen = new LoginScreen();
+        //LoginScreen loginScreen = new LoginScreen();
 
         //Quick OS check.
         if (System.getProperty("os.name").equals("Linux")) {
@@ -30,7 +30,7 @@ public class Main extends Application {
         LoginScreen.createLoginScene(850,675);
 
         //Get the login screen
-        login = loginScreen.getLoginScene();
+        login = LoginScreen.getLoginScene();
 
         //Set the title for the primary stage
         primaryStageStart.setTitle("Password Manager");

@@ -1,20 +1,16 @@
 package sample.Views;
 
-import javafx.embed.swing.SwingFXUtils;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.effect.Effect;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import sample.Main;
 import sample.Models.EntryObjectList;
 import sample.Models.UserPasswordFileActions;
@@ -22,17 +18,9 @@ import sample.Views.Tabs.BackupTab;
 import sample.Views.Tabs.CreateEntryTab;
 import sample.Views.Tabs.HomeTab;
 import sample.Views.Tabs.PasswordGeneratorTab;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -267,6 +255,14 @@ public class HomeScreen{
                         UserPasswordFileActions.exportClear(exportClearFile);
                         System.out.println(exportClearFile.toString());
                     }
+        });
+
+        importBackup.setOnAction(event -> {
+            createImportScreen.createImport();
+        });
+
+        exportBackup.setOnAction(event -> {
+            createExportScreen.createExport();
         });
 
         setHomeScene(scene);
