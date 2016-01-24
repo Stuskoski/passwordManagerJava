@@ -95,7 +95,6 @@ public class createExportScreen {
                 while(password.length() < 16){
                     password += "0";
                 }
-                System.out.println(password);
                 try {
                     FileOutputStream fout = new FileOutputStream(text.getText());
                     ObjectOutputStream oos = new ObjectOutputStream(fout);
