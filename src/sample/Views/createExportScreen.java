@@ -3,10 +3,7 @@ package sample.Views;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -27,6 +24,7 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Created by augustus on 1/24/16.
@@ -89,47 +87,58 @@ public class createExportScreen {
         exportStart.setOnAction(event -> {
             msg.setText("");
             if((pass.getText().length() != 0) && (text.getText().length() != 0)){
-                File file1 = new File(text.getText());
-                String password=pass.getText();
-                //pad the password.
-                while(password.length() < 16){
-                    password += "0";
-                }
-                try {
-                    FileOutputStream fout = new FileOutputStream(text.getText());
-                    ObjectOutputStream oos = new ObjectOutputStream(fout);
-                    oos.writeObject(EntryObjectList.getObjectList());
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation Dialog");
+                alert.setContentText("Export Backup to " + text.getText() + "?");
+                alert.setHeaderText(null);
+                alert.setWidth(400);
+                alert.resizableProperty().set(true);
 
-                    byte[] shaKey = password.getBytes("UTF-8");
-                    MessageDigest sha = MessageDigest.getInstance("SHA-1");;
-                    shaKey = sha.digest(shaKey);
-                    shaKey = Arrays.copyOf(shaKey, 16);
-                    try {
-                        sha = MessageDigest.getInstance("SHA-1");
-                        SecretKeySpec secretKeySpec = new SecretKeySpec(shaKey, "AES");
-                        Cipher cipher = Cipher.getInstance("AES");
-                        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
-                        FileInputStream inputStream = new FileInputStream(file1);
-                        byte[] inputBytes = new byte[(int) file1.length()];
-                        inputStream.read(inputBytes);
-
-                        byte[] outputBytes = cipher.doFinal(inputBytes);
-
-                        FileOutputStream outputStream = new FileOutputStream(file1);
-                        outputStream.write(outputBytes);
-
-                        inputStream.close();
-                        outputStream.close();
-
-                    } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
-                        System.out.println(e.getMessage());
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    File file1 = new File(text.getText());
+                    String password = pass.getText();
+                    //pad the password.
+                    while (password.length() < 16) {
+                        password += "0";
                     }
+                    try {
+                        FileOutputStream fout = new FileOutputStream(text.getText());
+                        ObjectOutputStream oos = new ObjectOutputStream(fout);
+                        oos.writeObject(EntryObjectList.getObjectList());
+
+                        byte[] shaKey = password.getBytes("UTF-8");
+                        MessageDigest sha = MessageDigest.getInstance("SHA-1");
+                        ;
+                        shaKey = sha.digest(shaKey);
+                        shaKey = Arrays.copyOf(shaKey, 16);
+                        try {
+                            sha = MessageDigest.getInstance("SHA-1");
+                            SecretKeySpec secretKeySpec = new SecretKeySpec(shaKey, "AES");
+                            Cipher cipher = Cipher.getInstance("AES");
+                            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+                            FileInputStream inputStream = new FileInputStream(file1);
+                            byte[] inputBytes = new byte[(int) file1.length()];
+                            inputStream.read(inputBytes);
+
+                            byte[] outputBytes = cipher.doFinal(inputBytes);
+
+                            FileOutputStream outputStream = new FileOutputStream(file1);
+                            outputStream.write(outputBytes);
+
+                            inputStream.close();
+                            outputStream.close();
+
+                        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
+                            System.out.println(e.getMessage());
+                        }
 
 
-                    //UserPasswordFileActions.encrypt(file1, file1);
-                    msg.setText("Export completed succesfully.");
-                } catch (IOException | NoSuchAlgorithmException e) {
-                    msg.setText("Export completed with errors.");
+                        //UserPasswordFileActions.encrypt(file1, file1);
+                        msg.setText("Export completed succesfully.");
+                    } catch (IOException | NoSuchAlgorithmException e) {
+                        msg.setText("Export completed with errors.");
+                    }
                 }
 
             }else{

@@ -243,6 +243,7 @@ public class HomeScreen{
             } catch (IOException e) {
                 System.out.println("An error occurred when exiting.");
             }
+            System.exit(0);
         });
 
         //Exporting to a cleartext file

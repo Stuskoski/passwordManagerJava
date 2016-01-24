@@ -3,16 +3,15 @@ package sample.Views;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sample.Models.EntryObjectList;
+import sample.Models.UserPasswordFileActions;
+import sample.Views.Tabs.HomeTab;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -24,6 +23,7 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Created by augustus on 1/24/16.
@@ -87,54 +87,75 @@ public class createImportScreen {
         importStart.setOnAction(event -> {
             msg.setText("");
             if ((pass.getText().length() != 0) && (text.getText().length() != 0)) {
-                File file1 = new File(text.getText());
-                File file2 = new File("tempFile");
-                String password = pass.getText();
-                //pad the password.
-                while (password.length() < 16) {
-                    password += "0";
-                }
-                try {
-                    byte[] shaKey = password.getBytes("UTF-8");
-                    MessageDigest sha = MessageDigest.getInstance("SHA-1");
-                    shaKey = sha.digest(shaKey);
-                    shaKey = Arrays.copyOf(shaKey, 16);
-                    try {
-                        sha = MessageDigest.getInstance("SHA-1");
-                        SecretKeySpec secretKeySpec = new SecretKeySpec(shaKey, "AES");
-                        Cipher cipher = Cipher.getInstance("AES");
-                        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
-                        FileInputStream inputStream = new FileInputStream(file1);
-                        byte[] inputBytes = new byte[(int) file1.length()];
-                        inputStream.read(inputBytes);
 
-                        byte[] outputBytes = cipher.doFinal(inputBytes);
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setWidth(400);
+                alert.setTitle("Confirmation Dialog");
+                alert.setContentText("Import Backup from " + text.getText() + "?");
+                alert.setHeaderText("Warning! This will overwrite your current password database!");
+                alert.resizableProperty().set(true);
 
-                        FileOutputStream outputStream = new FileOutputStream(file1);
-                        outputStream.write(outputBytes);
-
-                        inputStream.close();
-                        outputStream.close();
-
-                    } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
-                        System.out.println(e.getMessage());
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    File file1 = new File(text.getText());
+                    File file2 = new File("tempPWL");
+                    String password = pass.getText();
+                    //pad the password.
+                    while (password.length() < 16) {
+                        password += "0";
                     }
+                    try {
+                        byte[] shaKey = password.getBytes("UTF-8");
+                        MessageDigest sha = MessageDigest.getInstance("SHA-1");
+                        shaKey = sha.digest(shaKey);
+                        shaKey = Arrays.copyOf(shaKey, 16);
+                        try {
+                            sha = MessageDigest.getInstance("SHA-1");
+                            SecretKeySpec secretKeySpec = new SecretKeySpec(shaKey, "AES");
+                            Cipher cipher = Cipher.getInstance("AES");
+                            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
+                            FileInputStream inputStream = new FileInputStream(file1);
+                            byte[] inputBytes = new byte[(int) file1.length()];
+                            inputStream.read(inputBytes);
+
+                            byte[] outputBytes = cipher.doFinal(inputBytes);
+
+                            FileOutputStream outputStream = new FileOutputStream(file2);
+                            outputStream.write(outputBytes);
+
+                            inputStream.close();
+                            outputStream.close();
+
+                            EntryObjectList.setObjectList(UserPasswordFileActions.getObjectsFromFile(file2));
+
+                            HomeTab.refreshTable(HomeScreen.getHomeTab()); //refresh the tab in the background
+
+                            if(file2.delete()){
+                                System.out.println("Temp file cleaned up");
+                            }else{
+                                System.out.println("Warning - Temp file still exists.");
+                            }
+
+                        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
+                            System.out.println(e.getMessage());
+                        }
 
 
-                    //UserPasswordFileActions.encrypt(file1, file1);
-                    msg.setText("Export completed succesfully.");
-                } catch (IOException | NoSuchAlgorithmException e) {
-                    msg.setText("Export completed with errors.");
+                        //UserPasswordFileActions.encrypt(file1, file1);
+                        msg.setText("Import completed succesfully.");
+                    } catch (IOException | NoSuchAlgorithmException e) {
+                        msg.setText("Import completed with errors.");
+                    }
                 }
 
             } else {
                 msg.setText("Path and password may not be empty.");
             }
-
-            importStage.setScene(importScene);
-
-            //Fill stage with content
-            importStage.show();
         });
+
+        importStage.setScene(importScene);
+
+        //Fill stage with content
+        importStage.show();
     }
 }
