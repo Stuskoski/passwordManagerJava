@@ -55,19 +55,17 @@ public class BackupTab {
         if(new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/dropboxAuthKey").exists()){
             Button backup = new Button("Backup To Dropbox");
             Button deleteBackupFile = new Button("Delete Dropbox Authentication File");
-            Label msgForBackup = new Label("This page will backup to Dropbox your Encrypted Object File.\n" +
-                    "In order to reuse the file from your Dropbox, you are required to put it in your object" +
-                    "directory and have the same Username/Password as when you did the backup.");
+            Label msgForBackup = new Label("This page will backup to Dropbox\n your Encrypted Object File.");
 
             backup.setStyle("-fx-padding: 10 70 10 65");
             backup.setId("dark-btn");
             deleteBackupFile.setId("dark-btn");
 
-            backupVBox.getChildren().addAll(backup, deleteBackupFile);
+            backupVBox.getChildren().addAll(backup, deleteBackupFile, msgForBackup);
 
             backupGrid.add(backupVBox, 0, 0);
             backupGrid.add(statusMsg, 0 , 1);
-            backupGrid.add(msgForBackup, 0, 2);
+            //backupGrid.add(msgForBackup, 0, 2);
 
             backup.setOnAction(event -> {
                 statusMsg.setText("");

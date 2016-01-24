@@ -46,7 +46,7 @@ public class PasswordGeneratorTab {
         passOptionsBox.getChildren().add(passOptionsTitle);
 
         ChoiceBox numOfPass = new ChoiceBox();
-        numOfPass.getItems().addAll(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
+        numOfPass.getItems().addAll(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         numOfPass.setId("makeBoxesColor");
         numOfPass.getSelectionModel().selectFirst();
         Label numOfPassLabel = new Label("Number of Passwords:     ");
@@ -65,12 +65,14 @@ public class PasswordGeneratorTab {
 
         Label addNumbers = new Label("Numbers:                  ");
         CheckBox addNumbersCheck = new CheckBox();
+        addNumbersCheck.selectedProperty().setValue(true);
         HBox numbersBox = new HBox(5);
         numbersBox.setAlignment(Pos.CENTER);
         numbersBox.getChildren().addAll(addNumbers, addNumbersCheck);
 
         Label addSymbols = new Label("Symbols:                  ");
         CheckBox addSymbolsCheck = new CheckBox();
+        addSymbolsCheck.selectedProperty().setValue(true);
         HBox symbolsBox = new HBox(5);
         symbolsBox.setAlignment(Pos.CENTER);
         symbolsBox.getChildren().addAll(addSymbols, addSymbolsCheck);
@@ -94,10 +96,13 @@ public class PasswordGeneratorTab {
         buttonBox.getChildren().add(genPassBtn);
         VBox.setVgrow(buttonBox, Priority.ALWAYS);
 
-        Label passwordStrength = new Label("Password Strength");
-        HBox passwordStrengthMeterBox = new HBox();
+        Label passwordStrength = new Label("Password Strength: ");
+        ProgressBar passwordBar = new ProgressBar(0.5);
+        VBox passwordStrengthMeterBox = new VBox();
         passwordStrengthMeterBox.setAlignment(Pos.CENTER);
-        passwordStrengthMeterBox.getChildren().add(passwordStrength);
+        passwordStrengthMeterBox.getChildren().addAll(passwordStrength, passwordBar);
+
+
 
 
         genPassBtn.setOnMouseClicked(event -> {
@@ -120,18 +125,61 @@ public class PasswordGeneratorTab {
 
         lowerCaseCheck.setOnMouseClicked(event -> {
             if (!lowerCaseCheck.isSelected()) {
+                passwordBar.setProgress(passwordBar.getProgress() + 0.1);
                 upperCaseCheck.disableProperty().set(false);
             } else {
+                passwordBar.setProgress(passwordBar.getProgress() - 0.1);
                 upperCaseCheck.selectedProperty().set(false);
                 upperCaseCheck.disableProperty().set(true);
             }
         });
         upperCaseCheck.setOnMouseClicked(event -> {
             if(upperCaseCheck.isSelected()){
+                passwordBar.setProgress(passwordBar.getProgress() - 0.1);
                 lowerCaseCheck.selectedProperty().set(false);
                 lowerCaseCheck.disableProperty().set(true);
             }else{
+                passwordBar.setProgress(passwordBar.getProgress() + 0.1);
                 lowerCaseCheck.disableProperty().set(false);
+            }
+        });
+        addNumbersCheck.setOnMouseClicked(event -> {
+            if(addNumbersCheck.isSelected()){
+                passwordBar.setProgress(passwordBar.getProgress() + 0.1);
+            }else{
+                passwordBar.setProgress(passwordBar.getProgress() - 0.1);
+            }
+        });
+        addSymbolsCheck.setOnMouseClicked(event -> {
+            if(addSymbolsCheck.isSelected()){
+                passwordBar.setProgress(passwordBar.getProgress() + 0.1);
+            }else{
+                passwordBar.setProgress(passwordBar.getProgress() - 0.1);
+            }
+        });
+        passLength.setOnAction(event -> {
+            int x = (int) passLength.getValue();
+
+            if(x < 5){
+                passwordBar.setProgress(0.1);
+            }
+            if(x == 5 || x == 6){
+                passwordBar.setProgress(0.4);
+            }
+            if(x == 7 || x == 8){
+                passwordBar.setProgress(0.5);
+            }
+            if(x == 9 || x == 10){
+                passwordBar.setProgress(0.7);
+            }
+            if(x == 11 || x == 12){
+                passwordBar.setProgress(0.8);
+            }
+            if(x == 13 || x == 14){
+                passwordBar.setProgress(0.9);
+            }
+            if(x > 15){
+                passwordBar.setProgress(1.0);
             }
         });
 
