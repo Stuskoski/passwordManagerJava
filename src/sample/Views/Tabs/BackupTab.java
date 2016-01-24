@@ -20,9 +20,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by augustus on 1/23/16.
@@ -34,6 +34,7 @@ public class BackupTab {
 
     public static Tab createBackupTab(Tab backupTab4) {
         //GridPane backupGrid = new GridPane();
+        Timer timer = new Timer();
         BorderPane backupPane = new BorderPane();
         VBox backupVBox = new VBox(20);
         HBox titleHolder = new HBox();
@@ -74,14 +75,15 @@ public class BackupTab {
                     try {
                         InputStream in = new FileInputStream(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/.EncryptedObj");
                         try {
-                            metadata = DropboxConnect.getDropboxConnection().files.uploadBuilder("/passwordDropboxBackup").run(in);
+                            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                            Date date = new Date();
+                            metadata = DropboxConnect.getDropboxConnection().files.uploadBuilder("/passwordBackup - "+ date).run(in);
                         } finally {
                             in.close();
 
                             statusMsg.setText("Uploaded to dropbox successfully.");
 
                             //Timer to remove the msg after 5 seconds
-                            Timer timer = new Timer();
                             timer.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
@@ -98,7 +100,14 @@ public class BackupTab {
                     System.out.print(metadata.toStringMultiline());
 
                 } catch (IOException | DbxException e) {
+                    statusMsg.setText("Something went wrong while trying to backup to dropbox.");
                     System.out.println("Something went wrong while trying to backup to dropbox.");
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            Platform.runLater(BackupTab::removeWarning);
+                        }
+                    }, 10000);
                 }
 
             });
@@ -120,7 +129,6 @@ public class BackupTab {
                         BackupTab.createBackupTab(HomeScreen.getBackupTab());
 
                         //Timer to remove the msg after 5 seconds
-                        Timer timer = new Timer();
                         timer.schedule(new TimerTask() {
                             @Override
                             public void run() {
@@ -134,20 +142,17 @@ public class BackupTab {
                 }
             });
         }else{
-
-            //Button authDropBoxBtn = new Button("Authenticate With Dropbox");
-
-            //backupVBox.getChildren().add(authDropBoxBtn);
-
-            //backupGrid.add(backupVBox, 0, 0);
-            //backupGrid.add(statusMsg, 0 , 1);
-
             try {
                 DropboxConnect.authDropbox();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (DbxException e) {
-                e.printStackTrace();
+            } catch (IOException | DbxException e) {
+                statusMsg.setText("Something went wrong while trying to authenticate.");
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Platform.runLater(DropboxConnect::removeWarning);
+                    }
+                }, 10000);
+                //e.printStackTrace();
             }
 
             //BackupTab.createBackupTab(HomeScreen.getBackupTab());
@@ -163,8 +168,10 @@ public class BackupTab {
         return backupTab4;
     }
 
-    private static void removeWarning() {
+    public static void removeWarning() {
         statusMsg.setText("");
     }
     public static GridPane getBackupGrid(){ return backupGrid; }
+    public static Label getStatusMsg(){ return statusMsg; }
+    public static void setStatusMsg(String test){ statusMsg.setText(test); }
 }
