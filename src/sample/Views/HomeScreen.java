@@ -14,10 +14,8 @@ import javafx.stage.Stage;
 import sample.Main;
 import sample.Models.EntryObjectList;
 import sample.Models.UserPasswordFileActions;
-import sample.Views.Tabs.BackupTab;
-import sample.Views.Tabs.CreateEntryTab;
-import sample.Views.Tabs.HomeTab;
-import sample.Views.Tabs.PasswordGeneratorTab;
+import sample.Views.Tabs.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -99,7 +97,7 @@ public class HomeScreen{
         showTabs.getItems().addAll(showCreateEntry, showPasswordGeneratorTab, showBackupTab);
 
         //Add the submenu items to export
-        export.getItems().addAll(exportEncrypted, exportClear);
+        export.getItems().addAll(exportClear);
 
         //Add all the buttons to the file menu
         file.getItems().addAll(save, export,logout,exitApp);
@@ -113,9 +111,9 @@ public class HomeScreen{
         edit.getItems().add(properties);
 
         //Create and add the "Help" sub-menu options.
-        MenuItem visitWebsite = new MenuItem("Visit Website");
-        help.getItems().add(visitWebsite);
-        visitWebsite.setStyle("-fx-text-fill: black;");
+        MenuItem helpPage = new MenuItem("Help Page");
+        help.getItems().add(helpPage);
+        helpPage.setStyle("-fx-text-fill: black;");
 
         //Add the 3 main options
         mainMenu.getMenus().addAll(file, tabs, backup, help);
@@ -155,6 +153,14 @@ public class HomeScreen{
 
         //Add css sheet
         scene.getStylesheets().add("sample/Login.css");
+
+        helpPage.setOnAction(event -> {
+            Tab helpTab5 = new Tab();
+            helpTab5.setText("Help");
+            helpTab5 = HelpTab.createHelpTab(helpTab5);
+            helpTab5.setClosable(true);
+            tabPane.getTabs().add(helpTab5);
+        });
 
         exitApp.setOnAction(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

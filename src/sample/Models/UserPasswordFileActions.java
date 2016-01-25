@@ -74,27 +74,27 @@ public class UserPasswordFileActions {
 
             } else {
                 //If directory doesn't exist, create it and set it as hidden in windows.
-                if (!windowsDirectory.exists()) {
-                    if (windowsDirectory.mkdir()) {
+                if (!linuxDirectory.exists()) {
+                    if (linuxDirectory.mkdir()) {
                         System.out.println("Directory Created For Windows");
-                        Path windowsDir = Paths.get("UserFiles");
-                        Files.setAttribute(windowsDir, "dos:hidden", true);
+                        Path linuxDir = Paths.get(".UserFiles");
+                        Files.setAttribute(linuxDir, "dos:hidden", true);
                     } else {
                         System.out.println("Error: Unable to create directory for Windows");
                     }
                 }
                 //If password doesnt exist, create it and set it as hidden in windows.
-                if (!windowsPassDirectory.exists()) {
+                if (!linuxPassDirectory.exists()) {
                     try {
-                        if(windowsPassDirectory.mkdir()){
+                        if(linuxPassDirectory.mkdir()){
                             System.out.println("Windows user directory created.");
-                            Path windowsFile = Paths.get("UserFiles/" + LoginScreen.getLoggedInUser()+"Dir");
-                            Files.setAttribute(windowsFile, "dos:hidden", true);
-                            if(!windowsObjFile.exists()){
-                                if(windowsObjFile.createNewFile()){
+                            Path linuxFile = Paths.get(".UserFiles/." + LoginScreen.getLoggedInUser()+"Dir");
+                            Files.setAttribute(linuxFile, "dos:hidden", true);
+                            if(!linuxObjFile.exists()){
+                                if(linuxObjFile.createNewFile()){
                                     System.out.println("Windows Obj File Created.");
-                                    Path windowsObjFilePath = Paths.get("UserFiles/" + LoginScreen.getLoggedInUser()+"Dir/" + LoginScreen.getLoggedInUser() + "Obj");
-                                    Files.setAttribute(windowsObjFilePath, "dos:hidden", true);
+                                    Path linuxObjFilePath = Paths.get(".UserFiles/." + LoginScreen.getLoggedInUser()+"Dir/." + LoginScreen.getLoggedInUser() + "Obj");
+                                    Files.setAttribute(linuxObjFilePath, "dos:hidden", true);
                                 }else{
                                     System.out.println("Unable to create Windows Obj File.");
                                 }
@@ -137,9 +137,10 @@ public class UserPasswordFileActions {
 
         }else{
             try {
-                FileOutputStream fout = new FileOutputStream(windowsPasswordFile.toString());
+                FileOutputStream fout = new FileOutputStream(linuxObjFile.toString());
                 ObjectOutputStream oos = new ObjectOutputStream(fout);
                 oos.writeObject(objectsToFile);
+                encrypt(linuxObjFile, linuxEncrypted);
             } catch (IOException e) {
                 System.out.println("Error while trying to write objects to Windows file");
             }
@@ -171,7 +172,7 @@ public class UserPasswordFileActions {
         }else{
             try {
                 ObjectInputStream objectInputStream = new ObjectInputStream(
-                        new FileInputStream(windowsPasswordFile.toString()));
+                        new FileInputStream(decryptedFile.toString()));
                 entries = (List<EntryObjects>) objectInputStream.readObject();
                 return entries;
             } catch (IOException | ClassNotFoundException e) {
