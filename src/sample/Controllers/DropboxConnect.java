@@ -48,7 +48,7 @@ public class DropboxConnect {
             }
         }else{
             try {
-                appInfo = DbxAppInfo.Reader.readFromFile(new File("dropboxAppAuth"));
+                appInfo = DbxAppInfo.Reader.readFromFile(new File("src/sample/Controllers/dropboxAppAuth"));
 
                 DbxRequestConfig dbxRequestConfig = new DbxRequestConfig(
                         "dropbox/passwordManager-Stus", Locale.getDefault().toString());
