@@ -118,7 +118,7 @@ public class HomeScreen{
         visitWebsite.setStyle("-fx-text-fill: black;");
 
         //Add the 3 main options
-        mainMenu.getMenus().addAll(file, edit, tabs, backup, help);
+        mainMenu.getMenus().addAll(file, tabs, backup, help);
 
         //Create the tabs and then add them
         Tab homeTab1 = new Tab();

@@ -65,7 +65,7 @@ public class BackupTab {
             backupVBox.getChildren().addAll(backup, deleteBackupFile, msgForBackup);
 
             backupGrid.add(backupVBox, 0, 0);
-            //backupGrid.add(statusMsg, 0 , 1);
+            backupGrid.add(statusMsg, 0 , 1);
             //backupGrid.add(msgForBackup, 0, 2);
 
             backup.setOnAction(event -> {
