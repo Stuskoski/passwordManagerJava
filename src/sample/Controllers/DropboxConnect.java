@@ -13,7 +13,10 @@ import sample.Views.HomeScreen;
 import sample.Views.LoginScreen;
 import sample.Views.Tabs.BackupTab;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.net.URL;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,10 +29,11 @@ public class DropboxConnect {
 
     private static DbxClientV2 dropboxConnection;
     private static final String dropboxAccess = "OnH1oNyF_1sAAAAAAAB5LAXncmdSYiGQbjaTTAsZ5EHaskFCBtLEpNrsLXNE7UBi";
+    private static final String key = "p71od6rg4hqctc8";
+    private static final String secret = "k78f7mtp25ss8d7";
 
     public static void authDropbox()
             throws IOException, DbxException {
-
         Timer timer = new Timer();
         VBox authDropboxVbox = new VBox(15);
         DbxAuthInfo appText;
@@ -48,7 +52,12 @@ public class DropboxConnect {
             }
         }else{
             try {
-                appInfo = DbxAppInfo.Reader.readFromFile(new File("src/sample/Controllers/dropboxAppAuth"));
+
+                URL location = DropboxConnect.class.getProtectionDomain().getCodeSource().getLocation();
+                System.out.println(location.getFile()+"sample/Resources/dropboxAppAuth.txt");
+
+
+                appInfo = DbxAppInfo.Reader.readFromFile(new File(System.getProperty("user.home")+"/dropboxAppAuth"));
 
                 DbxRequestConfig dbxRequestConfig = new DbxRequestConfig(
                         "dropbox/passwordManager-Stus", Locale.getDefault().toString());
@@ -140,17 +149,12 @@ public class DropboxConnect {
                 });
             }
             catch (JsonReader.FileLoadException ex) {
+                System.setErr(new PrintStream(new FileOutputStream(System.getProperty("user.home")+"/error.log")));
                 System.err.println("Error reading <app-info-file>: " + ex.getMessage());
                 BackupTab.setStatusMsg("Error reading <app-info-file>: " + ex.getMessage());
                 //System.exit(1); return;
             }
         }
-
-
-
-
-
-
     }
 
     public static void setDropboxConnection(DbxClientV2 connection){

@@ -144,17 +144,28 @@ public class PasswordGeneratorTab {
             }
         });
         addNumbersCheck.setOnMouseClicked(event -> {
-            if(addNumbersCheck.isSelected()){
-                passwordBar.setProgress(passwordBar.getProgress() + 0.1);
-            }else{
-                passwordBar.setProgress(passwordBar.getProgress() - 0.1);
+            int y = (int) passLength.getValue();
+            if(y >= 15){
+                passwordBar.setProgress(1.0);
+            }else {
+                if (addNumbersCheck.isSelected()) {
+                    passwordBar.setProgress(passwordBar.getProgress() + 0.1);
+                } else {
+                    passwordBar.setProgress(passwordBar.getProgress() - 0.1);
+                }
             }
         });
         addSymbolsCheck.setOnMouseClicked(event -> {
-            if(addSymbolsCheck.isSelected()){
-                passwordBar.setProgress(passwordBar.getProgress() + 0.1);
+            int y = (int) passLength.getValue();
+
+            if(y >= 15){
+                passwordBar.setProgress(1.0);
             }else{
-                passwordBar.setProgress(passwordBar.getProgress() - 0.1);
+                if(addSymbolsCheck.isSelected()){
+                    passwordBar.setProgress(passwordBar.getProgress() + 0.1);
+                }else{
+                    passwordBar.setProgress(passwordBar.getProgress() - 0.1);
+                }
             }
         });
         passLength.setOnAction(event -> {
@@ -178,7 +189,7 @@ public class PasswordGeneratorTab {
             if(x == 13 || x == 14){
                 passwordBar.setProgress(0.9);
             }
-            if(x > 15){
+            if(x >= 15){
                 passwordBar.setProgress(1.0);
             }
         });

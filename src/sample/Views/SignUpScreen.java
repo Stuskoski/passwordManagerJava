@@ -85,11 +85,13 @@ public class SignUpScreen {
         //Create label object with the text "User Name:" at column 0, row 1
         Label email = new Label("Email:");
         grid.add(email, 0, 3);
+        email.visibleProperty().setValue(false);
 
         //Creates a text field object that can be edited at column 1, row 1.
         TextField emailTextField = new TextField();
         emailTextField.setPromptText("Optional");
         grid.add(emailTextField, 1, 3);
+        emailTextField.visibleProperty().set(false);
 
         //Shows the grid lines. Useful for debugging purposes
         grid.setGridLinesVisible(false);
