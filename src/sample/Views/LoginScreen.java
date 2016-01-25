@@ -149,6 +149,9 @@ public class LoginScreen {
                     attemptsLeft.setText("");
                     setUserPass(pwBox.getText());
                     setLoggedInUser(userTextField.getText());
+                    pwBox.setText("");
+                    userTextField.setText("");
+                    userTextField.requestFocus();
                     UserPasswordFileActions.createUserFile();
                     EntryObjectList.checkForObjInFile(new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/.EncryptedObj"));
                     LoginUser.resetPasswordCounter();
