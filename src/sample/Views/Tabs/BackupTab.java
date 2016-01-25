@@ -33,7 +33,7 @@ public class BackupTab {
     private static GridPane backupGrid = new GridPane();
 
     public static Tab createBackupTab(Tab backupTab4) {
-        backupTab4.setContent(null);
+        backupGrid.getChildren().clear();
         //GridPane backupGrid = new GridPane();
         Timer timer = new Timer();
         BorderPane backupPane = new BorderPane();
@@ -54,7 +54,6 @@ public class BackupTab {
         titleHolder.getChildren().add(backupTitle);
 
         if(new File(".UserFiles/." + LoginScreen.getLoggedInUser() + "Dir/dropboxAuthKey").exists()){
-            System.out.println("true");
             Button backup = new Button("Backup To Dropbox");
             Button deleteBackupFile = new Button("Delete Dropbox Authentication File");
             Label msgForBackup = new Label("This page will backup to Dropbox\n your Encrypted Object File.");
@@ -146,7 +145,6 @@ public class BackupTab {
                 }
             });
         }else{
-            System.out.println("false");
             try {
                 DropboxConnect.authDropbox();
             } catch (IOException | DbxException e) {
